@@ -24,7 +24,6 @@ export function AnimatedNav({ items }: AnimatedNavProps) {
   const lastScrollY = React.useRef(0);
   const scrollPositionOnCollapse = React.useRef(0);
 
-  // Delay mount so initial slide-in fires cleanly
   React.useEffect(() => {
     const t = setTimeout(() => setMounted(true), 50);
     return () => clearTimeout(t);
@@ -60,17 +59,17 @@ export function AnimatedNav({ items }: AnimatedNavProps) {
       transition={{ type: "spring", damping: 20, stiffness: 200, delay: 0.1 }}
     >
       <motion.nav
-        animate={{ width: isExpanded ? 320 : 48 }}
+        layout
         transition={{ type: "spring", damping: 26, stiffness: 300 }}
         onClick={handleNavClick}
         whileHover={!isExpanded ? { scale: 1.08 } : {}}
         whileTap={!isExpanded ? { scale: 0.95 } : {}}
         className={cn(
           "relative flex items-center overflow-hidden rounded-full border border-white/10 bg-zinc-900/80 shadow-lg backdrop-blur-sm h-12",
-          !isExpanded && "cursor-pointer"
+          isExpanded ? "px-2" : "w-12 justify-center cursor-pointer"
         )}
       >
-        {/* Collapsed menu icon */}
+        {/* Collapsed: menu icon */}
         <AnimatePresence>
           {!isExpanded && (
             <motion.div
@@ -78,15 +77,15 @@ export function AnimatedNav({ items }: AnimatedNavProps) {
               initial={{ opacity: 0, scale: 0.6 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.6 }}
-              transition={{ duration: 0.2, ease: "easeOut" }}
-              className="absolute inset-0 flex items-center justify-center pointer-events-none"
+              transition={{ duration: 0.18, ease: "easeOut" }}
+              className="pointer-events-none"
             >
               <Menu className="h-5 w-5 text-zinc-100" />
             </motion.div>
           )}
         </AnimatePresence>
 
-        {/* Expanded content */}
+        {/* Expanded: icon + links */}
         <AnimatePresence>
           {isExpanded && (
             <motion.div
@@ -94,30 +93,31 @@ export function AnimatedNav({ items }: AnimatedNavProps) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.2, delay: 0.1 }}
-              className="flex items-center w-full"
+              transition={{ duration: 0.2, delay: 0.08 }}
+              className="flex items-center gap-1"
             >
-              {/* Logo icon */}
-              <div className="flex-shrink-0 flex items-center pl-4 pr-3 text-zinc-100">
-                <Navigation className="h-5 w-5" />
+              {/* Navigation icon */}
+              <div className="pl-3 pr-1 text-zinc-500">
+                <Navigation className="h-4 w-4" />
               </div>
 
-              {/* Nav links */}
-              <div className="flex items-center gap-1 pr-4">
-                {items.map((item, i) => (
-                  <motion.a
-                    key={item.name}
-                    href={item.href}
-                    initial={{ opacity: 0, x: -8 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.25, delay: 0.15 + i * 0.06, ease: "easeOut" }}
-                    onClick={(e) => e.stopPropagation()}
-                    className="text-sm font-medium text-zinc-400 hover:text-zinc-100 transition-colors px-3 py-1 rounded-full hover:bg-white/5"
-                  >
-                    {item.name}
-                  </motion.a>
-                ))}
-              </div>
+              {/* Links */}
+              {items.map((item, i) => (
+                <motion.a
+                  key={item.name}
+                  href={item.href}
+                  initial={{ opacity: 0, x: -6 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.2, delay: 0.12 + i * 0.06, ease: "easeOut" }}
+                  onClick={(e) => e.stopPropagation()}
+                  className="text-sm font-medium text-zinc-400 hover:text-zinc-100 transition-colors px-3 py-1 rounded-full hover:bg-white/5 whitespace-nowrap"
+                >
+                  {item.name}
+                </motion.a>
+              ))}
+
+              {/* Trailing padding spacer */}
+              <div className="w-2" />
             </motion.div>
           )}
         </AnimatePresence>
