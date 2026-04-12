@@ -1,0 +1,116 @@
+{
+  "basics": {
+    "name": "Tran Chi Hieu",
+    "headline": "BI Developer | Data Analyst",
+    "location": "Hanoi, Vietnam",
+    "github": "https://github.com/hieutc",
+    "linkedin": "https://linkedin.com/in/hieutc"
+  },
+  "summary": "Analytical and results-driven BI Developer / Data Analyst with 6+ years of experience bridging the gap between raw data and business strategy. Experienced in designing data models, optimizing DAX, and automating Power BI solutions. Proven track record in building multi-tenant reporting solutions and delivering insights that improve operational efficiency.",
+  "projects": [
+    {
+      "name": "HealthTech Platform (Clinic Analytics)",
+      "tech": ["Power BI", "DAX", "dbt", "SQL", "Azure DevOps", "PowerShell", "PostgreSQL"],
+      "bullets": [
+        "Designed robust data models for Power BI dashboards and contributed to dbt transformation pipelines",
+        "Built web-style dashboards optimized for embedded analytics across multiple client workspaces",
+        "Optimized performance using advanced DAX techniques, DAX Studio, and Tabular Editor",
+        "Reduced data latency to near real-time via Power BI DirectQuery integrated with Apache Spark",
+        "Automated workspace creation and refresh alerting with Azure DevOps Pipelines and PowerShell"
+      ],
+      "description": "End-to-end embedded Power BI analytics platform for a health tech company, supporting multi-tenant clinic-level reporting."
+    },
+    {
+      "name": "Power BI Admin Monitoring",
+      "tech": ["Fabric Notebook", "PySpark", "Power Query (M)", "Power BI", "Fabric Lakehouse"],
+      "bullets": [
+        "Engineered end-to-end pipeline to capture historical governance and usage telemetry via Admin APIs",
+        "Orchestrated data with Fabric Data Pipeline and set up Fabric Lakehouse for log storage",
+        "Transformed data using Fabric Dataflow Gen 2 and Notebook",
+        "Built dashboard covering daily user activities, workspace-level metrics, and detailed audit logs"
+      ],
+      "description": "Custom governance and usage monitoring system extending Power BI's default admin workspace with historical analytics."
+    },
+    {
+      "name": "Fashion Retail Analytics Platform",
+      "tech": ["Power BI", "dbt", "SQL", "Dagster", "Snowflake", "Power Automate"],
+      "bullets": [
+        "Contributed to data cleaning, transformation, and modeling during legacy-to-cloud migration using dbt",
+        "Validated and monitored pipelines with Dagster to ensure accuracy of migrated datasets",
+        "Designed star schema data models to optimize dashboard query performance",
+        "Developed Power BI dashboards tracking sales KPIs for a large fashion retail enterprise",
+        "Implemented Power Automate to bypass capacity refresh limitations"
+      ],
+      "description": "Enterprise BI reporting platform for a large fashion retailer, migrated from legacy systems to Snowflake-based cloud data warehouse."
+    },
+    {
+      "name": "BPO Workforce Analytics System",
+      "tech": ["Power BI", "SQL Server", "Data Modeling", "Excel"],
+      "bullets": [
+        "Designed scalable data models and developed end-to-end data pipelines",
+        "Built Power BI dashboards monitoring headcount, attendance, compliance, and performance KPIs",
+        "Maintained headcount accuracy between 97%–103%",
+        "Performed capacity planning contributing to a 10–15% improvement in staffing efficiency"
+      ],
+      "description": "Workforce analytics system for an IT BPO company, enabling real-time headcount tracking and performance monitoring."
+    },
+    {
+      "name": "Employee Turnover Analysis",
+      "tech": ["Python", "Pandas", "Matplotlib", "Tableau"],
+      "bullets": [
+        "Implemented sentiment analysis on 5,000 turnover records using Python",
+        "Used Pandas and Matplotlib for data cleaning and EDA to identify primary drivers of turnover",
+        "Developed a machine learning regression model to predict turnover with 82% accuracy",
+        "Visualized key findings through Tableau dashboards"
+      ],
+      "description": "Predictive analytics project identifying factors leading to employee resignations using ML and data visualization."
+    }
+  ],
+  "skills": [
+    {
+      "category": "Business Intelligence",
+      "tools": ["Power BI", "Tableau", "DAX", "Data Modeling"]
+    },
+    {
+      "category": "Languages",
+      "tools": ["SQL", "Python", "DAX", "M (Power Query)", "PySpark"]
+    },
+    {
+      "category": "Databases",
+      "tools": ["SQL Server", "PostgreSQL", "MySQL"]
+    },
+    {
+      "category": "Data Warehousing",
+      "tools": ["Snowflake", "Google BigQuery", "Microsoft Fabric"]
+    },
+    {
+      "category": "Data Transform",
+      "tools": ["dbt", "Fabric Notebook", "Fabric Dataflow", "Dagster"]
+    }
+  ],
+  "certifications": [
+    {
+      "title": "Microsoft Fabric Analytics Engineer Associate",
+      "issuer": "Microsoft",
+      "credentialUrl": "https://learn.microsoft.com/en-us/users/tchieu/credentials/e3020b61cd4621d5"
+    },
+    {
+      "title": "Google Advanced Data Analytics",
+      "issuer": "Google / Coursera",
+      "credentialUrl": "https://www.coursera.org/account/accomplishments/specialization/45W36LJKKMGL"
+    },
+    {
+      "title": "Google Business Intelligence",
+      "issuer": "Google / Coursera",
+      "credentialUrl": "https://www.coursera.org/account/accomplishments/specialization/SH9SREWZKAGT"
+    }
+  ],
+  "education": [
+    {
+      "institution": "National Economics University",
+      "degree": "Bachelor's Degree",
+      "area": "International Economics",
+      "location": "Hanoi, Vietnam"
+    }
+  ]
+}
