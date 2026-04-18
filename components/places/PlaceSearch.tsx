@@ -43,7 +43,7 @@ export function PlaceSearch() {
       <PromptBox
         onSubmit={handleSubmit}
         loading={loading}
-        placeholder="I want a quiet cafe to work from... or Tôi muốn ăn phở tối nay..."
+        placeholder="Ask me anything..."
       />
       <SuggestionList
         suggestions={suggestions}

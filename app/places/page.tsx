@@ -1,4 +1,5 @@
 import { PlaceSearch } from "@/components/places/PlaceSearch";
+import { PinLock } from "@/components/places/PinLock";
 import { MapPin } from "lucide-react";
 import Link from "next/link";
 
@@ -10,6 +11,7 @@ export const metadata = {
 
 export default function PlacesPage() {
   return (
+    <PinLock>
     <main className="relative min-h-screen py-24 px-6">
       <div className="relative z-10 max-w-2xl mx-auto">
         {/* Header */}
@@ -31,8 +33,7 @@ export default function PlacesPage() {
             Find a Place
           </h1>
           <p className="text-zinc-500 text-lg leading-relaxed max-w-lg mx-auto">
-            Ask in any language. I&apos;ll search through my saved Google Maps places in Hanoi
-            and find the best match using AI.
+            A collection of my go-to places. Find a café, food, or your next favorite spot.
           </p>
         </div>
 
@@ -41,9 +42,10 @@ export default function PlacesPage() {
 
         {/* Footer note */}
         <p className="text-center text-xs text-zinc-700 mt-12">
-          Powered by Gemini 1.5 Flash · Places sourced from Google Maps saved lists
+          Powered by Claude · Places sourced from Hieu&apos;s saved lists
         </p>
       </div>
     </main>
+    </PinLock>
   );
 }
