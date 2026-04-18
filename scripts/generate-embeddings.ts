@@ -19,7 +19,7 @@ async function embedWithRetry(texts: string[], retries = 5): Promise<number[][]>
   for (let attempt = 0; attempt < retries; attempt++) {
     try {
       const result = await voyage.embed({ input: texts, model: "voyage-3-lite" });
-      return result.data.map((d) => d.embedding);
+      return (result.data ?? []).map((d) => d.embedding as number[]);
     } catch (e: unknown) {
       const status = (e as { statusCode?: number }).statusCode;
       if (status === 429 && attempt < retries - 1) {
