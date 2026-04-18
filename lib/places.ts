@@ -26,6 +26,21 @@ export async function getAllPlaces(): Promise<Place[]> {
   return data || [];
 }
 
+export async function searchPlacesByEmbedding(
+  embedding: number[],
+  topK = 30
+): Promise<Place[]> {
+  const supabase = createServerClient();
+
+  const { data, error } = await supabase.rpc("match_places", {
+    query_embedding: embedding,
+    match_count: topK,
+  });
+
+  if (error) throw new Error(`Vector search failed: ${error.message}`);
+  return data || [];
+}
+
 export function normalizePlaces(places: Place[]) {
   return places.map((p) => ({
     name: p.name,

@@ -1,22 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
-import { getAllPlaces, normalizePlaces } from "@/lib/places";
-import { getSuggestions } from "@/lib/gemini";
+import { searchPlacesByEmbedding, normalizePlaces } from "@/lib/places";
+import { embedQuery, getSuggestions } from "@/lib/claude";
 
 export async function POST(request: NextRequest) {
   try {
     const { query } = await request.json();
 
     if (!query || typeof query !== "string" || query.trim().length === 0) {
-      return NextResponse.json(
-        { error: "Query is required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Query is required" }, { status: 400 });
     }
 
-    // Fetch all places from Supabase
-    const rawPlaces = await getAllPlaces();
+    const embedding = await embedQuery(query.trim());
+    const rawPlaces = await searchPlacesByEmbedding(embedding, 30);
 
     if (rawPlaces.length === 0) {
       return NextResponse.json(
@@ -26,17 +23,12 @@ export async function POST(request: NextRequest) {
     }
 
     const places = normalizePlaces(rawPlaces);
-
-    // Get AI suggestions from Gemini
     const suggestions = await getSuggestions(query.trim(), places);
 
     return NextResponse.json({ suggestions });
   } catch (error) {
     console.error("Suggest API error:", error);
-
-    const message =
-      error instanceof Error ? error.message : "Internal server error";
-
+    const message = error instanceof Error ? error.message : "Internal server error";
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
