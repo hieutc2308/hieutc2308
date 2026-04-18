@@ -10,6 +10,7 @@
   "projects": [
     {
       "name": "HealthTech Platform (Clinic Analytics)",
+      "slug": "healthtech-clinic-analytics",
       "tech": ["Power BI", "DAX", "dbt", "SQL", "Azure DevOps", "PowerShell", "PostgreSQL"],
       "bullets": [
         "Designed robust data models for Power BI dashboards and contributed to dbt transformation pipelines",
@@ -22,6 +23,7 @@
     },
     {
       "name": "Power BI Admin Monitoring",
+      "slug": "powerbi-admin-monitoring",
       "tech": ["Fabric Notebook", "PySpark", "Power Query (M)", "Power BI", "Fabric Lakehouse"],
       "bullets": [
         "Engineered end-to-end pipeline to capture historical governance and usage telemetry via Admin APIs",
@@ -33,6 +35,7 @@
     },
     {
       "name": "Fashion Retail Analytics Platform",
+      "slug": "fashion-retail-analytics",
       "tech": ["Power BI", "dbt", "SQL", "Dagster", "Snowflake", "Power Automate"],
       "bullets": [
         "Contributed to data cleaning, transformation, and modeling during legacy-to-cloud migration using dbt",
@@ -45,6 +48,7 @@
     },
     {
       "name": "BPO Workforce Analytics System",
+      "slug": "bpo-workforce-analytics",
       "tech": ["Power BI", "SQL Server", "Data Modeling", "Excel"],
       "bullets": [
         "Designed scalable data models and developed end-to-end data pipelines",
@@ -56,6 +60,7 @@
     },
     {
       "name": "Employee Turnover Analysis",
+      "slug": "employee-turnover-analysis",
       "tech": ["Python", "Pandas", "Matplotlib", "Tableau"],
       "bullets": [
         "Implemented sentiment analysis on 5,000 turnover records using Python",

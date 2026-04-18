@@ -26,13 +26,13 @@ export function About() {
               <br />
               <span className="text-zinc-500">based in Hanoi.</span>
             </h2>
-            <p className="text-zinc-400 leading-relaxed mb-6">
+            <p className="text-zinc-300 leading-relaxed mb-6">
               Analytical and results-driven BI Developer with 6+ years of experience
               bridging the gap between raw data and business strategy. I specialize in
               designing robust data models, optimizing DAX, and automating Power BI
               solutions at scale.
             </p>
-            <p className="text-zinc-400 leading-relaxed">
+            <p className="text-zinc-300 leading-relaxed">
               My work spans multi-tenant clinic analytics, fashion retail platforms, and
               workforce intelligence systems — always focused on turning messy data into
               insights that actually move the needle.
@@ -65,9 +65,9 @@ export function About() {
             ].map((stat) => (
               <div
                 key={stat.label}
-                className="p-6 rounded-2xl bg-zinc-900 border border-zinc-800 hover:border-zinc-700 transition-colors"
+                className="p-6 rounded-2xl bg-zinc-900 border border-zinc-800 hover:border-zinc-700 hover:shadow-[0_4px_16px_rgba(0,0,0,0.35)] transition-all duration-200"
               >
-                <div className="text-4xl font-bold text-blue-500 mb-1">{stat.number}</div>
+                <div className="text-4xl font-bold text-zinc-100 mb-1">{stat.number}</div>
                 <div className="text-sm text-zinc-500">{stat.label}</div>
               </div>
             ))}

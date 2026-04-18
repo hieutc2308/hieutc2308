@@ -21,8 +21,8 @@ export function Hero() {
     <section className="relative w-full min-h-screen flex items-center justify-center bg-background">
       {/* Ambient glow blobs */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute right-[-15%] top-[-10%] w-[50%] h-[50%] rounded-full bg-blue-600/20 blur-[120px]" />
-        <div className="absolute left-[-10%] bottom-[-15%] w-[40%] h-[40%] rounded-full bg-cyan-500/10 blur-[120px]" />
+        <div className="absolute right-[-15%] top-[-10%] w-[50%] h-[50%] rounded-full bg-blue-600/15 blur-[120px]" />
+        <div className="absolute left-[-10%] bottom-[-15%] w-[40%] h-[40%] rounded-full bg-blue-500/8 blur-[120px]" />
       </div>
 
       {/* Content */}
@@ -41,7 +41,7 @@ export function Hero() {
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.1, ease: [0.6, 0, 0.25, 1] }}
+          transition={{ duration: 0.6, delay: 0.1, ease: [0.6, 0, 0.25, 1] }}
           className="mb-8"
         >
           <AnimatedHero
@@ -53,7 +53,7 @@ export function Hero() {
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.2, ease: [0.6, 0, 0.25, 1] }}
+          transition={{ duration: 0.6, delay: 0.2, ease: [0.6, 0, 0.25, 1] }}
           className="text-lg md:text-xl text-zinc-400 max-w-3xl leading-relaxed mb-10"
         >
           6+ years bridging raw data and business strategy. Building data models,

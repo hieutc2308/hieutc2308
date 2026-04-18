@@ -4,16 +4,9 @@ import { useState } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { useRef } from "react";
 import { cn } from "@/lib/utils";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, ArrowUpRight } from "lucide-react";
 import resume from "@/data/resume.json";
 
-const accentColors = [
-  "text-blue-400",
-  "text-cyan-400",
-  "text-indigo-400",
-  "text-emerald-400",
-  "text-purple-400",
-];
 
 const colSpans = [2, 1, 1, 2, 3];
 
@@ -49,13 +42,12 @@ export function Projects() {
             const isExpanded = expanded === index;
             const span = colSpans[index];
             const spanTwo = span >= 2;
-            const color = accentColors[index];
 
             return (
               <motion.div
                 key={project.name}
-                initial={{ opacity: 0, y: 30 }}
-                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                initial={{ opacity: 0, scale: 0.97 }}
+                animate={isInView ? { opacity: 1, scale: 1 } : {}}
                 transition={{
                   duration: 0.6,
                   delay: 0.08 * index,
@@ -63,8 +55,8 @@ export function Projects() {
                 }}
                 className={cn(
                   "group relative rounded-2xl overflow-hidden cursor-pointer",
-                  "border border-zinc-800 bg-zinc-900 transition-all duration-300",
-                  "hover:border-zinc-700 hover:-translate-y-0.5",
+                  "border border-zinc-800 bg-zinc-900 transition-all duration-200",
+                  "hover:border-zinc-700 hover:-translate-y-1 hover:shadow-[0_8px_24px_rgba(0,0,0,0.4)]",
                   span === 3 ? "md:col-span-3" : span === 2 ? "md:col-span-2" : "col-span-1"
                 )}
                 onClick={() => setExpanded(isExpanded ? null : index)}
@@ -80,15 +72,27 @@ export function Projects() {
                 <div className="relative p-6">
                   {/* Header row */}
                   <div className="flex items-start justify-between mb-3">
-                    <span className={`text-xs font-bold uppercase tracking-widest ${color}`}>
+                    <span className="text-xs font-bold uppercase tracking-widest text-blue-400">
                       {String(index + 1).padStart(2, "0")}
                     </span>
-                    <motion.div
-                      animate={{ rotate: isExpanded ? 180 : 0 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <ChevronDown className="w-4 h-4 text-zinc-600 group-hover:text-zinc-400 transition-colors" />
-                    </motion.div>
+                    <div className="flex items-center gap-2">
+                      {project.slug && (
+                        <a
+                          href={`/projects/${project.slug}`}
+                          onClick={(e) => e.stopPropagation()}
+                          className="text-zinc-600 hover:text-zinc-300 transition-colors duration-150"
+                          aria-label={`View details for ${project.name}`}
+                        >
+                          <ArrowUpRight className="w-4 h-4" />
+                        </a>
+                      )}
+                      <motion.div
+                        animate={{ rotate: isExpanded ? 180 : 0 }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        <ChevronDown className="w-4 h-4 text-zinc-600 group-hover:text-zinc-400 transition-colors" />
+                      </motion.div>
+                    </div>
                   </div>
 
                   {/* Title */}
@@ -125,7 +129,7 @@ export function Projects() {
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: "auto", opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.35, ease: [0.6, 0, 0.25, 1] }}
+                        transition={{ duration: 0.6, ease: [0.6, 0, 0.25, 1] }}
                         className="overflow-hidden"
                       >
                         <div className="pt-3 mt-3 border-t border-zinc-800 space-y-2">

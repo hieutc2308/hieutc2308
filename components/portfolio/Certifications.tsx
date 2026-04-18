@@ -9,8 +9,18 @@ export function Certifications() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
+  const stripStyle = {
+    background: "rgba(255,255,255,0.03)",
+    boxShadow: "0 0 0 1px rgba(255,255,255,0.06), 0 4px 12px rgba(0,0,0,0.25)",
+  };
+
+  const stripHover = {
+    background: "rgba(255,255,255,0.055)",
+    boxShadow: "0 0 0 1px rgba(255,255,255,0.10), 0 4px 16px rgba(0,0,0,0.35)",
+  };
+
   return (
-    <section id="certifications" className="py-24 md:py-32 px-6 bg-zinc-950/30">
+    <section id="certifications" className="py-24 md:py-32 px-6">
       <div className="max-w-4xl mx-auto">
         <div ref={ref} className="mb-12">
           <motion.span
@@ -31,61 +41,59 @@ export function Certifications() {
           </motion.h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="flex flex-col gap-3">
           {resume.certifications.map((cert, index) => (
             <motion.a
               key={cert.title}
               href={cert.credentialUrl}
               target="_blank"
               rel="noopener noreferrer"
-              initial={{ opacity: 0, y: 30 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              initial={{ opacity: 0, scale: 0.97 }}
+              animate={isInView ? { opacity: 1, scale: 1 } : {}}
               transition={{
-                duration: 0.6,
-                delay: 0.1 + index * 0.1,
+                duration: 0.5,
+                delay: 0.1 + index * 0.08,
                 ease: [0.6, 0, 0.25, 1],
               }}
-              whileHover={{ y: -4, borderColor: "rgba(59,130,246,0.4)" }}
-              className="group flex flex-col p-6 rounded-2xl border border-zinc-800 transition-all duration-300 cursor-pointer"
-              style={{
-                background: "linear-gradient(135deg, #1e2433 0%, #18181b 60%, #131318 100%)",
-              }}
+              style={stripStyle}
+              whileHover={stripHover}
+              className="group flex items-center gap-5 p-5 rounded-3xl cursor-pointer transition-colors duration-150"
             >
-              <div className="flex items-start justify-between mb-4">
-                <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center">
-                  <Award className="w-5 h-5 text-blue-400" />
-                </div>
-                <ExternalLink className="w-4 h-4 text-zinc-600 group-hover:text-zinc-400 transition-colors" />
+              <div className="flex-shrink-0 w-10 h-10 rounded-2xl bg-zinc-800 flex items-center justify-center">
+                <Award className="w-5 h-5 text-zinc-400 group-hover:text-zinc-300 transition-colors duration-150" />
               </div>
 
-              <h3 className="font-semibold text-zinc-100 mb-1 leading-snug">
-                {cert.title}
-              </h3>
-              <p className="text-sm text-zinc-500 mt-auto pt-3">{cert.issuer}</p>
+              <div className="flex-1 min-w-0">
+                <p className="font-semibold text-zinc-100 leading-snug">{cert.title}</p>
+                <p className="text-sm text-zinc-500 mt-0.5">{cert.issuer}</p>
+              </div>
+
+              <ExternalLink className="w-4 h-4 text-zinc-700 group-hover:text-zinc-400 flex-shrink-0 transition-colors duration-150" />
             </motion.a>
           ))}
-        </div>
 
-        {/* Education */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="mt-4 rounded-2xl border border-zinc-800 flex items-center gap-4 p-6"
-          style={{
-            background: "linear-gradient(135deg, #1e2433 0%, #18181b 60%, #131318 100%)",
-          }}
-        >
-          <div className="w-10 h-10 rounded-xl bg-zinc-800 border border-zinc-700 flex items-center justify-center flex-shrink-0">
-            <University className="w-5 h-5 text-zinc-400" />
-          </div>
-          <div>
-            <p className="font-semibold text-zinc-100">{resume.education[0].institution}</p>
-            <p className="text-sm text-zinc-500">
-              {resume.education[0].degree} · {resume.education[0].area}
-            </p>
-          </div>
-        </motion.div>
+          {/* Education */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.97 }}
+            animate={isInView ? { opacity: 1, scale: 1 } : {}}
+            transition={{ duration: 0.5, delay: 0.1 + resume.certifications.length * 0.08, ease: [0.6, 0, 0.25, 1] }}
+            style={stripStyle}
+            className="flex items-center gap-5 p-5 rounded-3xl"
+          >
+            <div className="flex-shrink-0 w-10 h-10 rounded-2xl bg-zinc-800 flex items-center justify-center">
+              <University className="w-5 h-5 text-zinc-400" />
+            </div>
+
+            <div className="flex-1 min-w-0">
+              <p className="font-semibold text-zinc-100 leading-snug">{resume.education[0].institution}</p>
+              <p className="text-sm text-zinc-500 mt-0.5">
+                {resume.education[0].degree} · {resume.education[0].area}
+              </p>
+            </div>
+
+            <span className="text-xs text-zinc-600 flex-shrink-0">Education</span>
+          </motion.div>
+        </div>
       </div>
     </section>
   );
