@@ -31,7 +31,7 @@ function AnimatedHero({ prefix = "I am a", titles, description }: AnimatedHeroPr
                 key={index}
                 className="absolute font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 whitespace-nowrap"
                 style={{ fontSize: "clamp(1.5rem, 6vw, 4.5rem)", lineHeight: 1.3 }}
-                initial={{ opacity: 0, y: "-100" }}
+                initial={{ opacity: 0, y: -100 }}
                 transition={{ type: "spring", stiffness: 50 }}
                 animate={
                   titleNumber === index

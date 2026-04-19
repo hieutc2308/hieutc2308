@@ -7,7 +7,6 @@ export interface PlaceSuggestion {
   list_name: string;
   note: string;
   google_maps_url: string;
-  reason: string;
 }
 
 export async function embedQuery(query: string): Promise<number[]> {
@@ -34,18 +33,19 @@ export async function getSuggestions(
   places: Array<{ name: string; list_name: string; note: string; google_maps_url: string }>
 ): Promise<PlaceSuggestion[]> {
   const placesText = places
-    .map((p) => `Name: ${p.name} | List: ${p.list_name} | Note: ${p.note || "—"}`)
+    .map((p) => `Name: ${p.name} | List: ${p.list_name} | Note: ${p.note || ""}`)
     .join("\n");
 
   const response = await client.messages.create({
     model: "claude-haiku-4-5",
     max_tokens: 1024,
-    system: `You are Hieu's personal place recommender in Hanoi, Vietnam. Rules:
-- Only recommend places from the provided list
-- The "reason" field should be 1–2 sentences explaining why this place fits the request
-- Respond in the same language as the user's query
+    system: `You are Hieu's personal place recommender. Rules:
+- Only recommend places from the provided list — never invent new ones
+- NEVER modify, translate, or fabricate the note field. Copy it exactly as given, or use "" if empty
+- The list_name often indicates the city or area (e.g. "Đà Lạt ăn gì" = Đà Lạt, "Lượn lờ Hà Nội" = Hanoi). Use this to determine location
+- If the query mentions a specific location or district, only recommend places from matching lists. Do not recommend places from other cities
 - Return ONLY a JSON array, no other text
-- Format: [{"name":"...","list_name":"...","note":"...","google_maps_url":"...","reason":"..."}]`,
+- Format: [{"name":"...","list_name":"...","note":"...","google_maps_url":"..."}]`,
     messages: [
       {
         role: "user",
@@ -57,12 +57,17 @@ export async function getSuggestions(
   const text = response.content[0].type === "text" ? response.content[0].text : "";
 
   const jsonMatch = text.match(/\[[\s\S]*\]/);
-  if (!jsonMatch) throw new Error("No JSON array found in Claude response");
+  if (!jsonMatch) throw new Error("No suggestions found. Please try a different query.");
 
   const suggestions = JSON.parse(jsonMatch[0]) as PlaceSuggestion[];
 
+  // Always restore note and URL from source data — prevents hallucination
   return suggestions.map((s) => {
     const original = places.find((p) => p.name === s.name);
-    return { ...s, google_maps_url: original?.google_maps_url || s.google_maps_url || "" };
+    return {
+      ...s,
+      note: original?.note || "",
+      google_maps_url: original?.google_maps_url || s.google_maps_url || "",
+    };
   });
 }

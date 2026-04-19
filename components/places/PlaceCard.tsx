@@ -8,7 +8,6 @@ export interface PlaceSuggestion {
   list_name: string;
   note: string;
   google_maps_url: string;
-  reason: string;
 }
 
 export function PlaceCard({
@@ -55,14 +54,8 @@ export function PlaceCard({
       </div>
 
       {suggestion.note && (
-        <p className="text-sm text-zinc-500 mb-3 pl-11">{suggestion.note}</p>
+        <p className="text-sm text-zinc-500 pl-11">{suggestion.note}</p>
       )}
-
-      <div className="pl-11">
-        <p className="text-sm text-zinc-400 italic leading-relaxed">
-          &ldquo;{suggestion.reason}&rdquo;
-        </p>
-      </div>
     </motion.div>
   );
 }
