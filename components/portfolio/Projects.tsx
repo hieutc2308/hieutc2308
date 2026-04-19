@@ -2,18 +2,11 @@
 
 import { useState, useRef, useCallback } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
-import { cn } from "@/lib/utils";
+import { cn, hexToRgba } from "@/lib/utils";
 import { ChevronDown, ArrowUpRight } from "lucide-react";
 import resume from "@/data/resume.json";
 
 const GLOW_COLORS = ["#3B82F6", "#1D4ED8"];
-
-function hexToRgba(hex: string, alpha: number) {
-  const r = parseInt(hex.slice(1, 3), 16);
-  const g = parseInt(hex.slice(3, 5), 16);
-  const b = parseInt(hex.slice(5, 7), 16);
-  return `rgba(${r},${g},${b},${alpha.toFixed(3)})`;
-}
 
 const glowVars = {
   "--glow-color":    hexToRgba(GLOW_COLORS[0], 1.0),

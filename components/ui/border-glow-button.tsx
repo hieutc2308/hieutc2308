@@ -1,14 +1,7 @@
 "use client";
 
 import { useRef, useEffect } from "react";
-import { cn } from "@/lib/utils";
-
-function hexToRgba(hex: string, alpha: number) {
-  const r = parseInt(hex.slice(1, 3), 16);
-  const g = parseInt(hex.slice(3, 5), 16);
-  const b = parseInt(hex.slice(5, 7), 16);
-  return `rgba(${r}, ${g}, ${b}, ${Math.min(alpha, 1).toFixed(3)})`;
-}
+import { cn, hexToRgba } from "@/lib/utils";
 
 function buildGlowVars(glowColors: string[], intensity: number): Record<string, string> {
   const vars: Record<string, string> = {};

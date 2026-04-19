@@ -3,11 +3,7 @@
 import * as React from "react";
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 import * as PopoverPrimitive from "@radix-ui/react-popover";
-
-type ClassValue = string | number | boolean | null | undefined;
-function cn(...inputs: ClassValue[]): string {
-  return inputs.filter(Boolean).join(" ");
-}
+import { cn } from "@/lib/utils";
 
 const TooltipProvider = TooltipPrimitive.Provider;
 const Tooltip = TooltipPrimitive.Root;

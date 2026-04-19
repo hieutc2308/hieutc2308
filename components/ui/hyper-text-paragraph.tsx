@@ -4,7 +4,9 @@ import React, { useState, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface HyperTextParagraphProps {
-  text: string;
+  text?: string;
+  /** Pass multiple strings to render as separate visual paragraphs sharing one hover state */
+  paragraphs?: string[];
   className?: string;
   /** Single words OR multi-word phrases, e.g. ["6+ years", "data models", "DAX", "Power BI"] */
   highlightWords?: string[];
@@ -58,7 +60,6 @@ const Word = React.memo(
         onMouseLeave={handleMouseLeave}
         animate={{
           scale: isHovered ? 1.1 : 1,
-          y: isHovered ? -4 : 0,
           opacity: isDimmed ? 0.3 : 1,
           filter: isDimmed ? "blur(2px)" : "blur(0px)",
           color: isHovered
@@ -71,26 +72,6 @@ const Word = React.memo(
         transition={{ type: "spring", stiffness: 180, damping: 22 }}
       >
         <span className="relative z-10 px-1">{children}</span>
-
-        {/* Corner accent dots */}
-        <AnimatePresence>
-          {isHovered && (
-            <>
-              <motion.span
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                exit={{ scale: 0 }}
-                className="absolute -top-1 -right-1 w-1 h-1 bg-blue-500 rounded-full z-20"
-              />
-              <motion.span
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                exit={{ scale: 0 }}
-                className="absolute -bottom-1 -left-1 w-1 h-1 bg-pink-500 rounded-full z-20"
-              />
-            </>
-          )}
-        </AnimatePresence>
       </motion.span>
     );
   })
@@ -151,6 +132,7 @@ interface PillPos {
 
 export function HyperTextParagraph({
   text,
+  paragraphs,
   className,
   highlightWords = [],
   defaultColor = "#a1a1aa",
@@ -159,10 +141,8 @@ export function HyperTextParagraph({
   const [pillPos, setPillPos] = useState<PillPos>({ left: 0, top: 0, width: 0, height: 0 });
 
   const containerRef = useRef<HTMLDivElement>(null);
-  // Holds a ref to each rendered Word's DOM node
   const tokenRefs = useRef<(HTMLSpanElement | null)[]>([]);
 
-  // Stable callback — reads the hovered word's rect and repositions the single pill
   const handleHoverStart = useCallback((idx: number) => {
     const el = tokenRefs.current[idx];
     const container = containerRef.current;
@@ -171,11 +151,10 @@ export function HyperTextParagraph({
     const elRect = el.getBoundingClientRect();
     const cRect = container.getBoundingClientRect();
 
-    // 8px padding on each side (matches -inset-2)
     setPillPos({
-      left: elRect.left - cRect.left - 8,
+      left: elRect.left - cRect.left - 14,
       top: elRect.top - cRect.top - 8,
-      width: elRect.width + 16,
+      width: elRect.width + 28,
       height: elRect.height + 16,
     });
     setHoveredIdx(idx);
@@ -185,53 +164,26 @@ export function HyperTextParagraph({
     setHoveredIdx(null);
   }, []);
 
-  const tokens = tokenize(text, highlightWords);
+  // Build a flat token list across all paragraphs, tracking paragraph boundaries
+  const allTexts = paragraphs ?? (text ? [text] : []);
+  const paragraphTokens: { tokens: Token[]; offset: number }[] = [];
+  let offset = 0;
+  for (const t of allTexts) {
+    const tokens = tokenize(t, highlightWords);
+    paragraphTokens.push({ tokens, offset });
+    offset += tokens.length;
+  }
 
-  return (
-    <div
-      ref={containerRef}
-      className={cn("relative leading-relaxed tracking-wide", className)}
-    >
-      {/*
-        ONE pill lives here — never unmounts between word transitions,
-        so there's no exit-then-enter flash. It just springs to the
-        new position. AnimatePresence only handles the very first
-        appear and final disappear.
-      */}
-      <AnimatePresence>
-        {hoveredIdx !== null && (
-          <motion.span
-            className="absolute rounded-lg bg-zinc-600/60 pointer-events-none"
-            // On first mount: appear at the correct position (no slide from 0,0)
-            initial={{ opacity: 0, ...pillPos }}
-            // On update: spring to new position while staying visible
-            animate={{ opacity: 1, ...pillPos }}
-            // On final leave: just fade out, no slide
-            exit={{ opacity: 0 }}
-            transition={{
-              opacity: { duration: 0.15, ease: "easeOut" },
-              left:   { type: "spring", stiffness: 180, damping: 22 },
-              top:    { type: "spring", stiffness: 180, damping: 22 },
-              width:  { type: "spring", stiffness: 180, damping: 22 },
-              height: { type: "spring", stiffness: 180, damping: 22 },
-            }}
-            style={{
-              zIndex: 0,
-              boxShadow: "0px 8px 20px -4px rgba(59, 130, 246, 0.25)",
-            }}
-          />
-        )}
-      </AnimatePresence>
-
-      {tokens.map((token, i) => (
-        <React.Fragment key={i}>
+  function renderTokens(tokens: Token[], startOffset: number) {
+    return tokens.map((token, i) => {
+      const globalIdx = startOffset + i;
+      return (
+        <React.Fragment key={globalIdx}>
           <Word
-            ref={(el) => {
-              tokenRefs.current[i] = el;
-            }}
-            wordIndex={i}
-            isHovered={hoveredIdx === i}
-            isDimmed={hoveredIdx !== null && hoveredIdx !== i}
+            ref={(el) => { tokenRefs.current[globalIdx] = el; }}
+            wordIndex={globalIdx}
+            isHovered={hoveredIdx === globalIdx}
+            isDimmed={hoveredIdx !== null && hoveredIdx !== globalIdx}
             isHighlightable={token.isHighlight}
             defaultColor={defaultColor}
             onHoverStart={handleHoverStart}
@@ -243,6 +195,41 @@ export function HyperTextParagraph({
             <span className="inline-block whitespace-pre"> </span>
           )}
         </React.Fragment>
+      );
+    });
+  }
+
+  return (
+    <div
+      ref={containerRef}
+      className={cn("relative leading-relaxed tracking-wide", className)}
+    >
+      <AnimatePresence>
+        {hoveredIdx !== null && (
+          <motion.span
+            className="absolute rounded-lg bg-zinc-600/60 pointer-events-none"
+            initial={{ opacity: 0, ...pillPos }}
+            animate={{ opacity: 1, ...pillPos }}
+            exit={{ opacity: 0 }}
+            transition={{
+              opacity: { duration: 0.15, ease: "easeOut" },
+              left:   { type: "spring", stiffness: 180, damping: 22 },
+              top:    { type: "spring", stiffness: 180, damping: 22 },
+              width:  { type: "spring", stiffness: 180, damping: 22 },
+              height: { type: "spring", stiffness: 180, damping: 22 },
+            }}
+            style={{ zIndex: 0, boxShadow: "0px 8px 20px -4px rgba(59, 130, 246, 0.25)" }}
+          >
+            <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }} className="absolute -top-1 -right-1 w-1.5 h-1.5 bg-blue-500 rounded-full" />
+            <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }} className="absolute -bottom-1 -left-1 w-1.5 h-1.5 bg-pink-500 rounded-full" />
+          </motion.span>
+        )}
+      </AnimatePresence>
+
+      {paragraphTokens.map(({ tokens, offset: pOffset }, pi) => (
+        <p key={pi} className={pi < paragraphTokens.length - 1 ? "mb-6" : undefined}>
+          {renderTokens(tokens, pOffset)}
+        </p>
       ))}
     </div>
   );

@@ -22,7 +22,7 @@ export function Certifications() {
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section id="certifications" className="py-24 md:py-32 px-6">
+    <section id="certifications" className="relative py-24 md:py-32 px-6">
 
 
       <div ref={ref} className="relative z-10 max-w-6xl mx-auto flex flex-col md:flex-row gap-16 md:gap-24">

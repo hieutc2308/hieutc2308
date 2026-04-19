@@ -3,7 +3,7 @@
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { Award, Trophy, BadgeCheck } from "lucide-react";
-import { TextRevealByWord } from "@/components/ui/text-reveal";
+import { HyperTextParagraph } from "@/components/ui/hyper-text-paragraph";
 
 // Card 1: Line chart — Years of Experience
 function LineChartCard({ isInView }: { isInView: boolean }) {
@@ -227,13 +227,13 @@ export function About() {
               <br />
               <span className="text-zinc-500">based in Hanoi.</span>
             </h2>
-            <TextRevealByWord
-              className="text-base md:text-lg text-zinc-300 leading-relaxed mt-8 mb-6"
-              text="Analytical and results-driven BI Developer with 6+ years of experience bridging the gap between raw data and business strategy. I specialize in designing robust data models, optimizing DAX, and automating Power BI solutions at scale."
-            />
-            <TextRevealByWord
-              className="text-base md:text-lg text-zinc-300 leading-relaxed"
-              text="My work spans multi-tenant clinic analytics, fashion retail platforms, and workforce intelligence systems, always focused on turning messy data into insights that actually move the needle."
+            <HyperTextParagraph
+              className="text-base md:text-lg leading-relaxed mt-8"
+              paragraphs={[
+                "With over 6 years of experience, I translate complex, messy data into clear Power BI solutions that drive real results.",
+                "From optimizing DAX to building robust data models, I'm passionate about bridging the gap between raw numbers and the strategic insights that help businesses move forward.",
+              ]}
+              highlightWords={["6 years of experience", "Power BI solutions", "strategic insights"]}
             />
           </motion.div>
 
