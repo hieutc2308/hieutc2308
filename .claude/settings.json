@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd \"/Users/hieutc/Claude Playground/Web Portfolio\" && status=$(git status --porcelain 2>/dev/null); [ -z \"$status\" ] && exit 0; code=$(echo \"$status\" | grep -E \"\\.(tsx?|jsx?|json|css)$\" | wc -l | tr -d ' '); docs=$(echo \"$status\" | grep -E \"(CLAUDE\\.md|README\\.md|\\.claude/)\" | wc -l | tr -d ' '); [ \"$code\" -gt 0 ] && [ \"$docs\" -eq 0 ] && echo \"{\\\"systemMessage\\\": \\\"Reminder: $code source file(s) modified — check if CLAUDE.md, .claude/ rules, or README.md need updating.\\\"}\" || true",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,5 +1,17 @@
 # Hieu Portfolio — Project Brief
 
+## Documentation Update Rule
+
+Whenever changes are made that affect project structure, architecture, or developer guidance, update the relevant docs **in the same session** before finishing:
+
+- **`CLAUDE.md`** — new/removed components, changed file paths, new gotchas, updated tech stack, new env vars
+- **`.claude/` rules** (e.g. `design-system.md`, `design-matching.md`) — changes to design tokens, patterns, or component conventions
+- **`README.md`** — if it exists and the change affects setup, deployment, or feature overview
+
+Do not wait until asked. If a change touches `components/`, `lib/`, `app/`, or `package.json` in a meaningful way, check these files and update them proactively.
+
+---
+
 ## What This Is
 
 A personal webapp with two modules:
@@ -17,7 +29,7 @@ A personal webapp with two modules:
 | Animations | Framer Motion v12 | |
 | UI Components | shadcn (Nova preset, Tailwind v4 mode) + custom 21st.dev components | |
 | Database | Supabase | Stores Google Maps saved places |
-| AI | Google Gemini 1.5 Flash via `@google/generative-ai` | |
+| AI | Anthropic Claude via `@anthropic-ai/sdk` | |
 | Deployment | Vercel | |
 
 ---
@@ -40,22 +52,23 @@ components/
     section-nav.tsx          ← Fixed right-side dot section navigator with IntersectionObserver
     navigation-menu.tsx      ← Collapse-to-pill nav on scroll (AnimatedNav)
     animated-hero.tsx        ← Rotating title words with spring physics
+    border-glow-button.tsx   ← Animated glow CTA button (used in Hero)
     flip-button.tsx          ← Flip animation CTA button
     radial-orbital-timeline.tsx  ← Skills orbital widget (loaded with ssr:false — see gotchas)
+    hyper-text-paragraph.tsx ← Interactive highlighted text with hover pill; supports paragraphs prop
+    text-reveal.tsx          ← Scroll-based word-by-word opacity reveal
+    icons.tsx                ← Shared SVG icons: GithubIcon, LinkedinIcon, GmailIcon, NextIcon, TailwindIcon, VercelIcon
     badge.tsx, button.tsx, card.tsx  ← shadcn primitives
     chatgpt-prompt-input.tsx ← Places search textarea
-    bg-pattern.tsx, bento-grid.tsx, gooey-text-morphing.tsx, the-infinite-grid.tsx  ← unused/legacy
   portfolio/
-    Hero.tsx           ← Full-viewport hero with ambient globs, animated title, scroll indicator
-    About.tsx          ← Two-column: text slides from left, stats from right
+    Hero.tsx           ← Full-viewport hero; plasma glow blobs (right top + left bottom); no bg-background on section
+    About.tsx          ← Two-column: HyperTextParagraph text (left), animated stat cards (right)
     Skills.tsx         ← Radial orbital timeline (dynamic import, ssr:false)
     Projects.tsx       ← Bento 3-col grid (colSpans=[2,1,1,2,3]), expandable cards
-    ProjectCard.tsx    ← Legacy card component (unused in current Projects.tsx)
     Certifications.tsx ← 3 cert cards + education row, gradient card backgrounds
     Footer.tsx         ← Name, LinkedIn + GitHub icons, link to /places
   places/
     PlaceSearch.tsx    ← Search input + triggers API call
-    SuggestionList.tsx ← Loading/error/results states
     PlaceCard.tsx      ← Individual place result card
 
 data/
@@ -63,9 +76,9 @@ data/
 
 lib/
   supabase.ts          ← Lazy client init (getSupabaseClient / createServerClient)
-  gemini.ts            ← Gemini API client (server-only)
+  claude.ts            ← Anthropic Claude API client (server-only)
   places.ts            ← getAllPlaces() + normalizePlaces() from Supabase
-  utils.ts             ← cn() helper (clsx + tailwind-merge)
+  utils.ts             ← cn() (clsx + tailwind-merge) + hexToRgba() helpers
 ```
 
 ---
@@ -131,7 +144,7 @@ Section nav dots (right side, `SectionNav`): About → Skills → Projects → C
 CSS uses `@import "tailwindcss"` not `@tailwind base/components/utilities`. Shadcn was initialized with `--css-variables` in Tailwind v4 mode.
 
 ### 5. lucide-react — no Linkedin/Github icons
-`Linkedin` and `Github` icons don't exist in lucide-react. Use inline SVG components (`LinkedinIcon`, `GithubIcon`) defined locally in `Hero.tsx` and `Footer.tsx`.
+`Linkedin` and `Github` icons don't exist in lucide-react. All custom SVG icons (`LinkedinIcon`, `GithubIcon`, `GmailIcon`, `NextIcon`, `TailwindIcon`, `VercelIcon`) live in `components/ui/icons.tsx` — import from there, do not redefine locally.
 
 ### 6. Framer Motion Variants type errors
 All `type:` values in transition objects need `as const` (e.g. `"spring" as const`) to satisfy TypeScript.
@@ -145,7 +158,7 @@ Uses `Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement>, "onSubmit">` to av
 
 ```
 # .env.local
-GEMINI_API_KEY=
+ANTHROPIC_API_KEY=
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
 SUPABASE_SERVICE_ROLE_KEY=
@@ -163,7 +176,7 @@ create table places (
   google_maps_url text,
   tags text,
   comment text,
-  list_name text,   -- derived from Google Takeout CSV filename (e.g. "Ăn đêm")
+  list_name text,
   created_at timestamptz default now()
 );
 ```

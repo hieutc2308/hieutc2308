@@ -166,6 +166,6 @@ On dark surfaces, use background luminance stepping and ambient shadows rather t
 
 See `CLAUDE.md` for all project-level gotchas. Key ones:
 - `RadialOrbitalTimeline` requires `dynamic(() => ..., { ssr: false })`
-- `Linkedin`/`Github` icons must be inline SVGs (not lucide-react)
+- `Linkedin`/`Github` and other custom icons live in `components/ui/icons.tsx` — import from there, never redefine locally (lucide-react doesn't include them)
 - Tailwind v4 uses `@import "tailwindcss"`, not `@tailwind` directives
 - All content driven by `data/resume.json`
