@@ -1,14 +1,88 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useCallback } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
-import { useRef } from "react";
 import { cn } from "@/lib/utils";
 import { ChevronDown, ArrowUpRight } from "lucide-react";
 import resume from "@/data/resume.json";
 
+const GLOW_COLORS = ["#3B82F6", "#1D4ED8"];
+
+function hexToRgba(hex: string, alpha: number) {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return `rgba(${r},${g},${b},${alpha.toFixed(3)})`;
+}
+
+const glowVars = {
+  "--glow-color":    hexToRgba(GLOW_COLORS[0], 1.0),
+  "--glow-color-60": hexToRgba(GLOW_COLORS[0], 0.6),
+  "--glow-color-50": hexToRgba(GLOW_COLORS[0], 0.5),
+  "--glow-color-40": hexToRgba(GLOW_COLORS[0], 0.4),
+  "--glow-color-30": hexToRgba(GLOW_COLORS[0], 0.3),
+  "--glow-color-b":    hexToRgba(GLOW_COLORS[1], 1.0),
+  "--glow-color-b-60": hexToRgba(GLOW_COLORS[1], 0.6),
+  "--cone-spread": "30",
+  "--border-radius": "16px",
+} as React.CSSProperties;
+
 
 const colSpans = [2, 1, 1, 2, 3];
+
+function GlowCard({ children, index, isInView, span, onClick }: {
+  children: React.ReactNode;
+  index: number;
+  isInView: boolean;
+  span: number;
+  onClick: () => void;
+}) {
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  const handlePointerMove = useCallback((e: React.PointerEvent) => {
+    const el = cardRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const cx = rect.width / 2;
+    const cy = rect.height / 2;
+    const dx = x - cx, dy = y - cy;
+    const kx = dx !== 0 ? cx / Math.abs(dx) : Infinity;
+    const ky = dy !== 0 ? cy / Math.abs(dy) : Infinity;
+    const proximity = Math.min(Math.max(1 / Math.min(kx, ky), 0), 1) * 100;
+    let angle = Math.atan2(dy, dx) * (180 / Math.PI) + 90;
+    if (angle < 0) angle += 360;
+    el.style.setProperty("--edge-proximity", proximity.toFixed(2));
+    el.style.setProperty("--cursor-angle", `${angle.toFixed(2)}deg`);
+  }, []);
+
+  const handlePointerLeave = useCallback(() => {
+    cardRef.current?.style.setProperty("--edge-proximity", "0");
+  }, []);
+
+  return (
+    <motion.div
+      ref={cardRef}
+      initial={{ opacity: 0, scale: 0.97 }}
+      animate={isInView ? { opacity: 1, scale: 1 } : {}}
+      transition={{ duration: 0.6, delay: 0.08 * index, ease: [0.6, 0, 0.25, 1] }}
+      className={cn(
+        "group relative rounded-2xl overflow-hidden cursor-pointer",
+        "bg-zinc-900 transition-all duration-200",
+        "hover:shadow-[0_8px_24px_rgba(0,0,0,0.4)]",
+        span === 3 ? "md:col-span-3" : span === 2 ? "md:col-span-2" : "col-span-1"
+      )}
+      style={glowVars}
+      onClick={onClick}
+      onPointerMove={handlePointerMove}
+      onPointerLeave={handlePointerLeave}
+    >
+      <span className="bgb-edge-light" />
+      {children}
+    </motion.div>
+  );
+}
 
 export function Projects() {
   const ref = useRef(null);
@@ -17,15 +91,18 @@ export function Projects() {
 
   return (
     <section id="projects" className="relative py-24 md:py-32 px-6">
-      <div className="max-w-5xl mx-auto">
+
+
+      <div className="relative z-10 max-w-6xl mx-auto">
         <div ref={ref} className="mb-12">
           <motion.span
             initial={{ opacity: 0, y: 10 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.5 }}
-            className="text-xs font-semibold text-blue-400 uppercase tracking-widest mb-4 block"
+            className="text-xs font-semibold text-blue-400 uppercase tracking-widest mb-4 flex items-center gap-2"
           >
-            Work
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden><path d="M6 0l1.5 4.5L12 6l-4.5 1.5L6 12 4.5 7.5 0 6l4.5-1.5z" fill="currentColor" /></svg>
+            <span className="shine-text">Work</span>
           </motion.span>
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
@@ -44,30 +121,17 @@ export function Projects() {
             const spanTwo = span >= 2;
 
             return (
-              <motion.div
+              <GlowCard
                 key={project.name}
-                initial={{ opacity: 0, scale: 0.97 }}
-                animate={isInView ? { opacity: 1, scale: 1 } : {}}
-                transition={{
-                  duration: 0.6,
-                  delay: 0.08 * index,
-                  ease: [0.6, 0, 0.25, 1],
-                }}
-                className={cn(
-                  "group relative rounded-2xl overflow-hidden cursor-pointer",
-                  "border border-zinc-800 bg-zinc-900 transition-all duration-200",
-                  "hover:border-zinc-700 hover:-translate-y-1 hover:shadow-[0_8px_24px_rgba(0,0,0,0.4)]",
-                  span === 3 ? "md:col-span-3" : span === 2 ? "md:col-span-2" : "col-span-1"
-                )}
+                index={index}
+                isInView={isInView}
+                span={span}
                 onClick={() => setExpanded(isExpanded ? null : index)}
               >
                 {/* Dot pattern on hover */}
                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[length:4px_4px]" />
                 </div>
-
-                {/* Gradient border accent */}
-                <div className={`absolute inset-0 -z-10 rounded-2xl p-px bg-gradient-to-br from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
 
                 <div className="relative p-6">
                   {/* Header row */}
@@ -149,7 +213,7 @@ export function Projects() {
                     {isExpanded ? "Click to collapse ↑" : "Click to expand →"}
                   </div>
                 </div>
-              </motion.div>
+              </GlowCard>
             );
           })}
         </div>

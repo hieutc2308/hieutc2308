@@ -61,7 +61,7 @@ export function SectionNav({ sections }: SectionNavProps) {
             onClick={() => handleClick(id)}
             onMouseEnter={() => setHovered(id)}
             onMouseLeave={() => setHovered(null)}
-            className="flex items-center gap-3 group"
+            className="flex items-center gap-3 group py-2 pl-8 -mr-2 cursor-pointer"
             aria-label={`Navigate to ${label}`}
           >
             {/* Label — always visible for active, visible on hover for others */}

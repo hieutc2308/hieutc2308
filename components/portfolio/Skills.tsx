@@ -81,15 +81,18 @@ export function Skills() {
 
   return (
     <section id="skills" className="relative py-24 md:py-32 px-6">
-      <div className="max-w-5xl mx-auto">
+
+
+      <div className="relative z-10 max-w-6xl mx-auto">
         <div ref={ref} className="mb-6">
           <motion.span
             initial={{ opacity: 0, y: 10 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.5 }}
-            className="text-xs font-semibold text-blue-400 uppercase tracking-widest mb-4 block"
+            className="text-xs font-semibold text-blue-400 uppercase tracking-widest mb-4 flex items-center gap-2"
           >
-            Expertise
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden><path d="M6 0l1.5 4.5L12 6l-4.5 1.5L6 12 4.5 7.5 0 6l4.5-1.5z" fill="currentColor" /></svg>
+            <span className="shine-text">Expertise</span>
           </motion.span>
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
@@ -99,14 +102,6 @@ export function Skills() {
           >
             Skills
           </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 10 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-sm text-zinc-600"
-          >
-            Click a node to explore — drag to interact
-          </motion.p>
         </div>
 
         <motion.div

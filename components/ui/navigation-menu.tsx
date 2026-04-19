@@ -65,7 +65,7 @@ export function AnimatedNav({ items }: AnimatedNavProps) {
         whileHover={!isExpanded ? { scale: 1.08 } : {}}
         whileTap={!isExpanded ? { scale: 0.95 } : {}}
         className={cn(
-          "relative flex items-center overflow-hidden rounded-full border border-white/10 bg-zinc-900/80 shadow-lg backdrop-blur-sm h-12",
+          "relative flex items-center overflow-hidden rounded-full border border-white/[0.14] bg-zinc-800/90 backdrop-blur-md h-12 shadow-[0_8px_32px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.10),0_0_24px_rgba(167,139,250,0.10),0_0_48px_rgba(34,211,238,0.06)]",
           isExpanded ? "px-2" : "w-12 justify-center cursor-pointer"
         )}
       >

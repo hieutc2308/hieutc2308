@@ -2,7 +2,8 @@
 
 import { motion } from "framer-motion";
 import { AnimatedHero } from "@/components/ui/animated-hero";
-import { FlipButton } from "@/components/ui/flip-button";
+import { BorderGlowButton } from "@/components/ui/border-glow-button";
+import { HyperTextParagraph } from "@/components/ui/hyper-text-paragraph";
 
 const GithubIcon = () => (
   <svg viewBox="0 0 24 24" className="w-4 h-4" fill="currentColor">
@@ -20,13 +21,13 @@ export function Hero() {
   return (
     <section className="relative w-full min-h-screen flex items-center justify-center bg-background">
       {/* Ambient glow blobs */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+      <div className="absolute inset-0 pointer-events-none overflow-hidden flex justify-center items-center">
+        {/* original hero offset blobs */}
         <div className="absolute right-[-15%] top-[-10%] w-[50%] h-[50%] rounded-full bg-blue-600/15 blur-[120px]" />
         <div className="absolute left-[-10%] bottom-[-15%] w-[40%] h-[40%] rounded-full bg-blue-500/8 blur-[120px]" />
       </div>
-
       {/* Content */}
-      <div className="relative z-10 flex flex-col items-center text-center px-6 max-w-4xl mx-auto">
+      <div className="relative z-10 flex flex-col items-center text-center px-6 max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -50,15 +51,19 @@ export function Hero() {
           />
         </motion.div>
 
-        <motion.p
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2, ease: [0.6, 0, 0.25, 1] }}
-          className="text-lg md:text-xl text-zinc-400 max-w-3xl leading-relaxed mb-10"
+          className="text-lg md:text-xl max-w-3xl mb-10"
         >
-          6+ years bridging raw data and business strategy. Building data models,
-          optimizing DAX, and automating Power BI solutions that drive operational efficiency.
-        </motion.p>
+          <HyperTextParagraph
+            text="6+ years bridging raw data and business strategy. Building data models, optimizing DAX, and automating Power BI solutions that drive operational efficiency."
+            highlightWords={["6+ years", "data models", "DAX", "Power BI"]}
+            defaultColor="#a1a1aa"
+            className="leading-relaxed"
+          />
+        </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -66,27 +71,30 @@ export function Hero() {
           transition={{ duration: 0.6, delay: 0.3, ease: [0.6, 0, 0.25, 1] }}
           className="flex flex-col sm:flex-row items-center gap-4"
         >
-          <FlipButton text1="See Projects" text2="See My Work" onClick={() => {
-            document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" });
-          }} />
+          <BorderGlowButton
+            animated
+            onClick={() => document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" })}
+          >
+            See My Work
+          </BorderGlowButton>
 
           <div className="flex items-center gap-3">
-            <a
+            <BorderGlowButton
               href="https://www.linkedin.com/in/hieutc2308/"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center w-10 h-10 rounded-full border border-zinc-700 text-zinc-400 hover:text-zinc-100 hover:border-zinc-500 transition-all"
+              className="bgb-icon text-zinc-400 hover:text-zinc-100 transition-colors"
             >
               <LinkedinIcon />
-            </a>
-            <a
+            </BorderGlowButton>
+            <BorderGlowButton
               href="https://github.com/hieutc"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center w-10 h-10 rounded-full border border-zinc-700 text-zinc-400 hover:text-zinc-100 hover:border-zinc-500 transition-all"
+              className="bgb-icon text-zinc-400 hover:text-zinc-100 transition-colors"
             >
               <GithubIcon />
-            </a>
+            </BorderGlowButton>
           </div>
         </motion.div>
       </div>

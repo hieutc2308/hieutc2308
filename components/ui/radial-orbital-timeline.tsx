@@ -151,18 +151,18 @@ export default function RadialOrbitalTimeline({
         style={{ perspective: "1000px" }}
       >
         {/* Center orb */}
-        <div className="absolute w-16 h-16 rounded-full bg-gradient-to-br from-blue-600 via-blue-500 to-cyan-500 flex items-center justify-center z-10 shadow-lg shadow-blue-500/30">
-          <div className="absolute w-20 h-20 rounded-full border border-blue-500/20 animate-ping opacity-40" />
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 rounded-full bg-gradient-to-br from-blue-600 via-blue-500 to-cyan-500 flex items-center justify-center z-10 shadow-lg shadow-blue-500/30">
+          <div className="absolute w-20 h-20 rounded-full border-2 border-blue-400/80 animate-[ping_2.5s_cubic-bezier(0,0,0.2,1)_infinite]" />
           <div
-            className="absolute w-24 h-24 rounded-full border border-blue-500/10 animate-ping opacity-20"
-            style={{ animationDelay: "0.5s" }}
+            className="absolute w-24 h-24 rounded-full border-2 border-blue-400/60 animate-[ping_2.5s_cubic-bezier(0,0,0.2,1)_infinite]"
+            style={{ animationDelay: "1.25s" }}
           />
           <div className="w-6 h-6 rounded-full bg-white/90" />
         </div>
 
         {/* Orbit ring */}
         <div
-          className="absolute rounded-full border border-zinc-800"
+          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border border-zinc-600"
           style={{ width: `${RADIUS * 2}px`, height: `${RADIUS * 2}px` }}
         />
 
@@ -178,7 +178,11 @@ export default function RadialOrbitalTimeline({
           return (
             <div
               key={item.id}
-              className="absolute transition-all duration-700 cursor-pointer"
+              className={`absolute left-1/2 top-1/2 -ml-[22px] -mt-[22px] cursor-pointer ${
+                !autoRotate 
+                  ? "transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)]" 
+                  : "transition-all duration-75 ease-linear"
+              }`}
               style={{
                 transform: `translate(${pos.x}px, ${pos.y}px)`,
                 zIndex: isExpanded ? 200 : pos.zIndex,
