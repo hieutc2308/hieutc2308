@@ -77,7 +77,7 @@ data/
 lib/
   supabase.ts          ← Lazy client init (getSupabaseClient / createServerClient)
   claude.ts            ← Anthropic Claude API client (server-only)
-  places.ts            ← getAllPlaces() + normalizePlaces() from Supabase
+  places.ts            ← searchPlacesByEmbedding() + normalizePlaces() + detectLocationPattern() from Supabase
   utils.ts             ← cn() (clsx + tailwind-merge) + hexToRgba() helpers
 ```
 
