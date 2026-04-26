@@ -6,7 +6,7 @@ import Link from "next/link";
 export const metadata = {
   title: "AI Place Suggester — Tran Chi Hieu",
   description:
-    "Find the perfect place in Hanoi using natural language. Powered by Gemini AI and Hieu's Google Maps saved places.",
+    "Find the perfect place in Hanoi using natural language. Powered by Claude and Hieu's Google Maps saved places.",
 };
 
 export default function PlacesPage() {
