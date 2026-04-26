@@ -117,7 +117,7 @@ Section order (top → bottom):
 5. **Certifications** — `id="certifications"`, 3 cards + education row
 6. **Footer**
 
-Section nav dots (right side, `SectionNav`): About → Skills → Projects → Certs
+Section nav dots (right side, `SectionNav`): About → Skills → Projects → Testimonials → Certs → Contact
 
 ---
 
