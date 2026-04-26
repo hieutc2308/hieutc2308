@@ -3,7 +3,14 @@ import { NextRequest, NextResponse } from "next/server";
 export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
-  const { pin } = await request.json();
+  let pin: unknown;
+
+  try {
+    const body = await request.json();
+    pin = body.pin;
+  } catch {
+    return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
+  }
 
   if (!pin || typeof pin !== "string") {
     return NextResponse.json({ error: "PIN required" }, { status: 400 });
