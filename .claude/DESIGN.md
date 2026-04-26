@@ -47,13 +47,16 @@ spacing:
 components:
   button-primary:
     backgroundColor: "{colors.primary}"
-    textColor: "{colors.foreground}"
+    textColor: "{colors.background}"
     rounded: "{rounded.sm}"
     padding: 12px 24px
   card:
     backgroundColor: "{colors.surface}"
     textColor: "{colors.foreground}"
     rounded: "{rounded.lg}"
+  timestamp:
+    backgroundColor: "transparent"
+    textColor: "{colors.subtle}"
   badge:
     backgroundColor: "{colors.elevated}"
     textColor: "{colors.muted}"
