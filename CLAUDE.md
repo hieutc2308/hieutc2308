@@ -69,7 +69,7 @@ components/
     Footer.tsx         ← Name, LinkedIn + GitHub icons, link to /places
   places/
     PlaceSearch.tsx    ← Search input + triggers API call
-    PlaceCard.tsx      ← Individual place result card
+    PlaceCard.tsx      ← PlaceSuggestion type definition
 
 data/
   resume.json          ← SOURCE OF TRUTH for all portfolio content (projects, skills, certs, education)
