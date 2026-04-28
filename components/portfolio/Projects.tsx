@@ -91,7 +91,7 @@ export function Projects() {
           <motion.span
             initial={{ opacity: 0, y: 10 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.6, ease: [0.6, 0, 0.25, 1] }}
             className="text-xs font-semibold text-blue-400 uppercase tracking-widest mb-4 flex items-center gap-2"
           >
             <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden><path d="M6 0l1.5 4.5L12 6l-4.5 1.5L6 12 4.5 7.5 0 6l4.5-1.5z" fill="currentColor" /></svg>

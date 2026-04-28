@@ -31,7 +31,7 @@ export function Contact() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-start">
           {/* Left */}
           <motion.div
-            initial={{ opacity: 0, x: -40 }}
+            initial={{ opacity: 0, x: -50 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.7, ease: [0.6, 0, 0.25, 1] }}
           >
@@ -52,7 +52,7 @@ export function Contact() {
           {/* Right — form */}
           <motion.form
             onSubmit={handleSubmit}
-            initial={{ opacity: 0, x: 40 }}
+            initial={{ opacity: 0, x: 50 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.7, delay: 0.15, ease: [0.6, 0, 0.25, 1] }}
             className="flex flex-col gap-4"
