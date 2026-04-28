@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useId } from "react";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -22,12 +22,14 @@ const CARDS = [
 
 // ─── Card 01: Live waveform ────────────────────────────────────────────────────
 
-function WaveformViz() {
+function WaveformViz({ isActive }: { isActive: boolean }) {
+  const uid    = useId().replace(/:/g, "");
   const svgRef = useRef<SVGSVGElement>(null);
   const tRef   = useRef(0);
   const rafRef = useRef<number>(0);
 
   useEffect(() => {
+    if (!isActive) return;
     const W = 200, H = 80, N = 22;
 
     function wave(x: number, t: number) {
@@ -44,9 +46,9 @@ function WaveformViz() {
       const pts = xs
         .map((x, i) => `${i === 0 ? "M" : "L"} ${x.toFixed(1)} ${ys[i].toFixed(1)}`)
         .join(" ");
-      svg.querySelector<SVGPathElement>("#wf-line")!.setAttribute("d", pts);
-      svg.querySelector<SVGPathElement>("#wf-area")!.setAttribute("d", `${pts} L ${W} ${H} L 0 ${H} Z`);
-      const dot = svg.querySelector<SVGCircleElement>("#wf-dot")!;
+      svg.querySelector<SVGPathElement>(`#${uid}-line`)!.setAttribute("d", pts);
+      svg.querySelector<SVGPathElement>(`#${uid}-area`)!.setAttribute("d", `${pts} L ${W} ${H} L 0 ${H} Z`);
+      const dot = svg.querySelector<SVGCircleElement>(`#${uid}-dot`)!;
       dot.setAttribute("cx", xs[N - 1].toFixed(1));
       dot.setAttribute("cy", ys[N - 1].toFixed(1));
       tRef.current += 0.022;
@@ -55,19 +57,19 @@ function WaveformViz() {
 
     rafRef.current = requestAnimationFrame(frame);
     return () => cancelAnimationFrame(rafRef.current);
-  }, []);
+  }, [isActive, uid]);
 
   return (
     <svg ref={svgRef} className="w-full h-full" viewBox="0 0 200 80" preserveAspectRatio="none">
       <defs>
-        <linearGradient id="wf-grad" x1="0" y1="0" x2="0" y2="1">
+        <linearGradient id={`${uid}-grad`} x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor="#3B82F6" stopOpacity="0.25" />
           <stop offset="100%" stopColor="#3B82F6" stopOpacity="0" />
         </linearGradient>
       </defs>
-      <path id="wf-area" fill="url(#wf-grad)" />
-      <path id="wf-line" fill="none" stroke="#3B82F6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-      <circle id="wf-dot" r="4" fill="#60A5FA" stroke="#09090b" strokeWidth="2" />
+      <path id={`${uid}-area`} fill={`url(#${uid}-grad)`} />
+      <path id={`${uid}-line`} fill="none" stroke="#3B82F6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+      <circle id={`${uid}-dot`} r="4" fill="#60A5FA" stroke="#09090b" strokeWidth="2" />
     </svg>
   );
 }
@@ -109,7 +111,7 @@ function BarsViz({ isActive }: { isActive: boolean }) {
 // ─── CardViz dispatcher ────────────────────────────────────────────────────────
 
 function CardViz({ idx, isActive }: { idx: number; isActive: boolean }) {
-  if (idx === 0) return <WaveformViz />;
+  if (idx === 0) return <WaveformViz isActive={isActive} />;
   if (idx === 1) return <BarsViz isActive={isActive} />;
   return <div className="flex-1 flex items-center justify-center text-zinc-700 text-xs">viz {idx}</div>;
 }
@@ -219,6 +221,7 @@ export function StatCardStack() {
                 <div
                   className="absolute left-0 right-0 h-px pointer-events-none"
                   style={{
+                    top: 0,
                     background: "linear-gradient(90deg, transparent, rgba(59,130,246,0.2), transparent)",
                     animation: "scanLine 3s linear infinite",
                   }}
