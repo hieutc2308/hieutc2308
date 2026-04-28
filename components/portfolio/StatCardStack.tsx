@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback, useId } from "react";
+import { motion } from "framer-motion";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -108,12 +109,133 @@ function BarsViz({ isActive }: { isActive: boolean }) {
   );
 }
 
+// ─── Card 03: Orbiting cert rings ─────────────────────────────────────────────
+
+const CERT_ICONS = [
+  { bg: "rgba(29,78,216,0.15)",  border: "rgba(29,78,216,0.35)",  dot: "#1D4ED8", spinDur: 4,   reverse: false },
+  { bg: "rgba(59,130,246,0.15)", border: "rgba(59,130,246,0.4)",  dot: "#3B82F6", spinDur: 3.5, reverse: false },
+  { bg: "rgba(96,165,250,0.12)", border: "rgba(96,165,250,0.3)",  dot: "#60A5FA", spinDur: 5,   reverse: true  },
+] as const;
+
+function CertsViz() {
+  return (
+    <div className="flex justify-around items-center h-full">
+      {CERT_ICONS.map(({ bg, border, dot, spinDur, reverse }, i) => (
+        <motion.div
+          key={i}
+          className="w-[52px] h-[52px] rounded-full flex items-center justify-center relative"
+          style={{ background: bg, border: `1px solid ${border}` }}
+          animate={{ scale: [1, 1.1, 1] }}
+          transition={{ duration: 3, ease: "easeInOut" as const, repeat: Infinity, delay: i * 0.9 }}
+        >
+          {/* Outer dashed ring */}
+          <motion.div
+            className="absolute inset-[-10px] rounded-full"
+            style={{ border: "1px dashed rgba(59,130,246,0.18)" }}
+            animate={{ rotate: -360 }}
+            transition={{ duration: 8, ease: "linear" as const, repeat: Infinity }}
+          />
+          {/* Inner solid ring */}
+          <motion.div
+            className="absolute inset-[-4px] rounded-full"
+            style={{ border: "1.5px solid rgba(59,130,246,0.45)" }}
+            animate={{ rotate: reverse ? -360 : 360 }}
+            transition={{ duration: spinDur, ease: "linear" as const, repeat: Infinity }}
+          />
+          <div className="w-4 h-4 rounded-full relative z-10" style={{ background: dot }} />
+        </motion.div>
+      ))}
+    </div>
+  );
+}
+
+// ─── Card 04: Donut arc draw ───────────────────────────────────────────────────
+
+function arcPath(cx: number, cy: number, r: number, startDeg: number, endDeg: number): string {
+  const rad = (d: number) => (d - 90) * (Math.PI / 180);
+  const x1 = (cx + r * Math.cos(rad(startDeg))).toFixed(2);
+  const y1 = (cy + r * Math.sin(rad(startDeg))).toFixed(2);
+  const x2 = (cx + r * Math.cos(rad(endDeg))).toFixed(2);
+  const y2 = (cy + r * Math.sin(rad(endDeg))).toFixed(2);
+  const large = endDeg - startDeg > 180 ? 1 : 0;
+  return `M ${x1} ${y1} A ${r} ${r} 0 ${large} 1 ${x2} ${y2}`;
+}
+
+const DONUT_SEGS = [
+  { pct: 0.40, color: "#1D4ED8", label: "Healthcare" },
+  { pct: 0.30, color: "#3B82F6", label: "Retail" },
+  { pct: 0.30, color: "#93C5FD", label: "HR / Workforce" },
+] as const;
+
+// cx=35, cy=35, r=26, gapDeg=12 — mirrors original About.tsx DonutCard exactly
+const CX = 35, CY = 35, R = 26, GAP = 12;
+
+function buildDonutPaths(): { d: string; color: string; label: string }[] {
+  let startDeg = 0;
+  return DONUT_SEGS.map(({ pct, color, label }) => {
+    const sweepDeg = pct * 360 - GAP;
+    const d = arcPath(CX, CY, R, startDeg + GAP / 2, startDeg + GAP / 2 + sweepDeg);
+    startDeg += pct * 360;
+    return { d, color, label };
+  });
+}
+
+const DONUT_PATHS = buildDonutPaths();
+
+function DonutViz({ isActive }: { isActive: boolean }) {
+  const [cycle, setCycle]   = useState(0);
+  const [fading, setFading] = useState(false);
+
+  useEffect(() => {
+    if (!isActive) { setFading(false); return; }
+    setFading(false);
+    const fadeT  = setTimeout(() => setFading(true),              2800);
+    const cycleT = setTimeout(() => setCycle(c => c + 1),         3300);
+    return () => { clearTimeout(fadeT); clearTimeout(cycleT); };
+  }, [isActive, cycle]);
+
+  return (
+    <div className="flex items-center justify-center gap-3 h-full">
+      <svg
+        width="70" height="70" viewBox="0 0 70 70"
+        style={{ transition: "opacity 0.5s", opacity: fading ? 0 : 1 }}
+      >
+        {DONUT_PATHS.map(({ d, color }, i) => (
+          <motion.path
+            key={`${i}-${cycle}`}
+            d={d}
+            fill="none"
+            stroke={color}
+            strokeWidth="7"
+            strokeLinecap="butt"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={isActive ? { pathLength: 1, opacity: 1 } : { pathLength: 0, opacity: 0 }}
+            transition={{
+              pathLength: { duration: 0.8, delay: 0.1 + i * 0.25, ease: [0.6, 0, 0.25, 1] as [number,number,number,number] },
+              opacity:    { duration: 0.1, delay: 0.1 + i * 0.25 },
+            }}
+          />
+        ))}
+      </svg>
+      <div className="flex flex-col gap-1.5">
+        {DONUT_PATHS.map(({ color, label }) => (
+          <div key={label} className="flex items-center gap-1.5">
+            <div className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: color }} />
+            <span className="text-[10px] text-zinc-400 leading-none">{label}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 // ─── CardViz dispatcher ────────────────────────────────────────────────────────
 
 function CardViz({ idx, isActive }: { idx: number; isActive: boolean }) {
   if (idx === 0) return <WaveformViz isActive={isActive} />;
   if (idx === 1) return <BarsViz isActive={isActive} />;
-  return <div className="flex-1 flex items-center justify-center text-zinc-700 text-xs">viz {idx}</div>;
+  if (idx === 2) return <CertsViz />;
+  return <DonutViz isActive={isActive} />;
 }
 
 // ─── StatCardStack ─────────────────────────────────────────────────────────────
