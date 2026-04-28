@@ -70,14 +70,26 @@ export function StatCardStack() {
     return () => { if (timerRef.current) clearInterval(timerRef.current); };
   }, [startTimer]);
 
-  const handleClick = () => { startTimer(); advance(); };
+  const handleClick = () => {
+    if (busyRef.current) return;
+    startTimer();
+    advance();
+  };
 
   const goTo = useCallback((target: number) => {
     if (busyRef.current) return;
-    setQueue(q => {
-      const idx = q.indexOf(target);
-      return [...q.slice(idx), ...q.slice(0, idx)];
-    });
+    busyRef.current = true;
+    const current = queueRef.current[0];
+    if (current === target) { busyRef.current = false; return; }
+    setFlyingIdx(current);
+    setTimeout(() => {
+      setFlyingIdx(null);
+      setQueue(q => {
+        const idx = q.indexOf(target);
+        return [...q.slice(idx), ...q.slice(0, idx)];
+      });
+      busyRef.current = false;
+    }, 440);
     startTimer();
   }, [setQueue, startTimer]);
 
