@@ -20,14 +20,98 @@ const CARDS = [
   { num: "04 / 04", value: "3",  label: "Industry Verticals" },
 ] as const;
 
-// ─── Placeholder viz (replaced in Task 2–3) ───────────────────────────────────
+// ─── Card 01: Live waveform ────────────────────────────────────────────────────
 
-function CardViz({ idx, isActive }: { idx: number; isActive: boolean }) {
+function WaveformViz() {
+  const svgRef = useRef<SVGSVGElement>(null);
+  const tRef   = useRef(0);
+  const rafRef = useRef<number>(0);
+
+  useEffect(() => {
+    const W = 200, H = 80, N = 22;
+
+    function wave(x: number, t: number) {
+      return H * 0.72
+        - Math.sin((x / W) * Math.PI * 2 + t) * H * 0.26
+        - Math.sin((x / W) * Math.PI * 3.5 + t * 1.4) * H * 0.10;
+    }
+
+    function frame() {
+      const svg = svgRef.current;
+      if (!svg) return;
+      const xs = Array.from({ length: N }, (_, i) => (i / (N - 1)) * W);
+      const ys = xs.map(x => wave(x, tRef.current));
+      const pts = xs
+        .map((x, i) => `${i === 0 ? "M" : "L"} ${x.toFixed(1)} ${ys[i].toFixed(1)}`)
+        .join(" ");
+      svg.querySelector<SVGPathElement>("#wf-line")!.setAttribute("d", pts);
+      svg.querySelector<SVGPathElement>("#wf-area")!.setAttribute("d", `${pts} L ${W} ${H} L 0 ${H} Z`);
+      const dot = svg.querySelector<SVGCircleElement>("#wf-dot")!;
+      dot.setAttribute("cx", xs[N - 1].toFixed(1));
+      dot.setAttribute("cy", ys[N - 1].toFixed(1));
+      tRef.current += 0.022;
+      rafRef.current = requestAnimationFrame(frame);
+    }
+
+    rafRef.current = requestAnimationFrame(frame);
+    return () => cancelAnimationFrame(rafRef.current);
+  }, []);
+
   return (
-    <div className="flex-1 flex items-center justify-center text-zinc-700 text-xs">
-      viz {idx}
+    <svg ref={svgRef} className="w-full h-full" viewBox="0 0 200 80" preserveAspectRatio="none">
+      <defs>
+        <linearGradient id="wf-grad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#3B82F6" stopOpacity="0.25" />
+          <stop offset="100%" stopColor="#3B82F6" stopOpacity="0" />
+        </linearGradient>
+      </defs>
+      <path id="wf-area" fill="url(#wf-grad)" />
+      <path id="wf-line" fill="none" stroke="#3B82F6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+      <circle id="wf-dot" r="4" fill="#60A5FA" stroke="#09090b" strokeWidth="2" />
+    </svg>
+  );
+}
+
+// ─── Card 02: Bar chart ────────────────────────────────────────────────────────
+
+const BAR_HEIGHTS = [55, 72, 60, 88, 100];
+
+function BarsViz({ isActive }: { isActive: boolean }) {
+  const [cycle, setCycle] = useState(0);
+
+  useEffect(() => {
+    if (!isActive) return;
+    const t = setInterval(() => setCycle(c => c + 1), 2600);
+    return () => clearInterval(t);
+  }, [isActive]);
+
+  return (
+    <div className="flex items-end gap-2 h-full">
+      {BAR_HEIGHTS.map((h, i) => (
+        <div
+          key={`${i}-${cycle}`}
+          className="flex-1 rounded-t"
+          style={{
+            background: "linear-gradient(to top, #1D4ED8, #3B82F6)",
+            transformOrigin: "bottom",
+            height: 0,
+            ["--bar-h" as string]: `${h}%`,
+            animation: isActive
+              ? `barUp 2.6s cubic-bezier(0.16,1,0.3,1) ${i * 0.12}s forwards`
+              : "none",
+          }}
+        />
+      ))}
     </div>
   );
+}
+
+// ─── CardViz dispatcher ────────────────────────────────────────────────────────
+
+function CardViz({ idx, isActive }: { idx: number; isActive: boolean }) {
+  if (idx === 0) return <WaveformViz />;
+  if (idx === 1) return <BarsViz isActive={isActive} />;
+  return <div className="flex-1 flex items-center justify-center text-zinc-700 text-xs">viz {idx}</div>;
 }
 
 // ─── StatCardStack ─────────────────────────────────────────────────────────────
