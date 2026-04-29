@@ -1,0 +1,89 @@
+# .github/workflows/playwright.yml
+name: Playwright Tests
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+    branches: [main]
+
+jobs:
+  functional:
+    name: Functional Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium firefox
+
+      - name: Build Next.js app
+        run: npm run build
+        env:
+          # Build requires these vars to exist; portfolio home never calls Supabase
+          # /places is excluded from tests so placeholders are safe here
+          NEXT_PUBLIC_SUPABASE_URL: placeholder
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: placeholder
+
+      - name: Start app and run functional tests
+        run: |
+          npm run start &
+          npx wait-on http://localhost:3000 --timeout 30000
+          npx playwright test --project=functional --project=functional-firefox
+        env:
+          CI: true
+
+      - name: Upload report on failure
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: functional-report
+          path: playwright-report/
+          retention-days: 7
+
+  visual:
+    name: Visual Regression (PRs only)
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: Wait for Vercel preview deployment
+        uses: patrickedqvist/wait-for-vercel-preview@v1.3.2
+        id: vercel_preview
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          max_timeout: 300
+
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run visual tests against Vercel preview
+        run: npx playwright test --project=visual
+        env:
+          CI: true
+          BASE_URL: ${{ steps.vercel_preview.outputs.url }}
+
+      - name: Upload diff on failure
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: visual-diff
+          path: playwright-report/
+          retention-days: 7
