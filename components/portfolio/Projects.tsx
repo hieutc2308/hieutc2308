@@ -1,12 +1,29 @@
 "use client";
 
-import { useRef } from "react";
+import React, { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import resume from "@/data/resume.json";
 
-const GALLERY_CONFIG = [
+type GlowConfig = {
+  w: number;
+  h: number;
+  opacity: number;
+  right?: string;
+  left?: string;
+  top?: string;
+  bottom?: string;
+};
+
+const GALLERY_CONFIG: {
+  col: string;
+  row: string;
+  gradient: string;
+  glow: GlowConfig;
+  titleSize: string;
+  viz: React.ReactNode;
+}[] = [
   {
     col: "md:[grid-column:1/3]",
     row: "md:[grid-row:1/2]",
@@ -84,11 +101,18 @@ const GALLERY_CONFIG = [
       </svg>
     ),
   },
-] as const;
+];
 
 type GalleryCardProps = {
   project: (typeof resume.projects)[number];
-  config: (typeof GALLERY_CONFIG)[number];
+  config: {
+    col: string;
+    row: string;
+    gradient: string;
+    glow: GlowConfig;
+    titleSize: string;
+    viz: React.ReactNode;
+  };
   index: number;
   isInView: boolean;
 };
@@ -102,11 +126,11 @@ function GalleryCard({ project, config, index, isInView }: GalleryCardProps) {
     background: "#3B82F6",
     filter: "blur(50px)",
     opacity: glow.opacity,
+    right:  glow.right,
+    left:   glow.left,
+    top:    glow.top,
+    bottom: glow.bottom,
   };
-  if ("right"  in glow) glowStyle.right  = (glow as { right: string }).right;
-  if ("left"   in glow) glowStyle.left   = (glow as { left: string }).left;
-  if ("top"    in glow) glowStyle.top    = (glow as { top: string }).top;
-  if ("bottom" in glow) glowStyle.bottom = (glow as { bottom: string }).bottom;
 
   return (
     <motion.a
