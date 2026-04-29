@@ -4,8 +4,8 @@ const localURL = process.env.BASE_URL ?? 'http://localhost:3000'
 
 export default defineConfig({
   testDir: './tests',
-  baseURL: localURL,
   use: {
+    baseURL: localURL,
     headless: !!process.env.CI,
     trace: 'on-first-retry',
   },
