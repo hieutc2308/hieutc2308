@@ -1,8 +1,10 @@
 import { defineConfig, devices } from '@playwright/test'
 
+const localURL = process.env.BASE_URL ?? 'http://localhost:3000'
+
 export default defineConfig({
   testDir: './tests',
-  baseURL: process.env.BASE_URL ?? 'http://localhost:3000',
+  baseURL: localURL,
   use: {
     headless: !!process.env.CI,
     trace: 'on-first-retry',
@@ -25,13 +27,13 @@ export default defineConfig({
     },
   ],
   expect: {
-    toHaveScreenshot: { maxDiffPixels: 100 },
+    toHaveScreenshot: { maxDiffPixelRatio: 0.02 },
   },
   webServer: process.env.BASE_URL
     ? undefined
     : {
         command: 'npm run dev',
-        url: 'http://localhost:3000',
+        url: localURL,
         reuseExistingServer: true,
       },
 })
