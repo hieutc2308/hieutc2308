@@ -1,6 +1,14 @@
 // tests/functional/home.spec.ts
 import { test, expect } from '@playwright/test'
 
+test('no unhandled JS errors on load', async ({ page }) => {
+  const errors: Error[] = []
+  page.on('pageerror', err => errors.push(err))
+  await page.goto('/')
+  await page.waitForLoadState('networkidle')
+  expect(errors).toHaveLength(0)
+})
+
 test.describe('Portfolio Home', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/')
@@ -10,16 +18,6 @@ test.describe('Portfolio Home', () => {
 
   test('page title matches', async ({ page }) => {
     await expect(page).toHaveTitle('Tran Chi Hieu — BI Developer & Data Analyst')
-  })
-
-  test('no console errors on load', async ({ page }) => {
-    const errors: string[] = []
-    page.on('console', msg => {
-      if (msg.type() === 'error') errors.push(msg.text())
-    })
-    await page.goto('/')
-    await page.waitForLoadState('networkidle')
-    expect(errors).toHaveLength(0)
   })
 
   test('no broken images', async ({ page }) => {
@@ -37,7 +35,7 @@ test.describe('Portfolio Home', () => {
   // ── Top nav ────────────────────────────────────────────────────────────────
 
   test('top nav is visible on load', async ({ page }) => {
-    await expect(page.locator('nav').first()).toBeVisible()
+    await expect(page.locator('nav.rounded-full')).toBeVisible()
   })
 
   test('top nav Portfolio link href is /', async ({ page }) => {
@@ -56,13 +54,11 @@ test.describe('Portfolio Home', () => {
 
   test('section nav About button scrolls #about into viewport', async ({ page }) => {
     await page.getByRole('button', { name: 'Navigate to About' }).click()
-    await page.waitForTimeout(800) // smooth scroll
     await expect(page.locator('#about')).toBeInViewport()
   })
 
   test('section nav Projects button scrolls #projects into viewport', async ({ page }) => {
     await page.getByRole('button', { name: 'Navigate to Projects' }).click()
-    await page.waitForTimeout(800)
     await expect(page.locator('#projects')).toBeInViewport()
   })
 
@@ -76,7 +72,6 @@ test.describe('Portfolio Home', () => {
 
   test('hero animated title is visible', async ({ page }) => {
     // AnimatedHero cycles through: BI Developer / Data Analyst / Analytic Engineer
-    // Use .or() chain — one of the three must be visible at any given moment
     await expect(
       page.locator('text=BI Developer')
         .or(page.locator('text=Data Analyst'))
@@ -100,17 +95,15 @@ test.describe('Portfolio Home', () => {
 
   test('skills section renders SVG orbital timeline', async ({ page }) => {
     await page.locator('#skills').scrollIntoViewIfNeeded()
-    await page.waitForTimeout(1000) // wait for dynamic import + animation
     await expect(
       page.locator('#skills svg, #skills canvas').first()
-    ).toBeVisible()
+    ).toBeVisible({ timeout: 5000 })
   })
 
   // ── Projects ───────────────────────────────────────────────────────────────
 
   test('at least 3 project cards visible', async ({ page }) => {
     await page.locator('#projects').scrollIntoViewIfNeeded()
-    await page.waitForTimeout(600)
     const cards = page.locator('#projects a[href^="/projects/"]')
     await expect(cards.first()).toBeVisible()
     expect(await cards.count()).toBeGreaterThanOrEqual(3)
@@ -118,9 +111,11 @@ test.describe('Portfolio Home', () => {
 
   test('clicking a project card navigates to its detail page', async ({ page }) => {
     await page.locator('#projects').scrollIntoViewIfNeeded()
-    await page.waitForTimeout(600)
-    await page.locator('#projects a[href^="/projects/"]').first().click()
+    const card = page.locator('#projects a[href^="/projects/"]').first()
+    await expect(card).toBeVisible()
+    await card.click()
     await expect(page).toHaveURL(/\/projects\//)
+    await expect(page.locator('h1').first()).toBeVisible()
   })
 
   // ── Footer ─────────────────────────────────────────────────────────────────
