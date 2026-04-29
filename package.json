@@ -8,7 +8,11 @@
     "start": "next start",
     "lint": "eslint",
     "import-places": "tsx scripts/import-places.ts",
-    "generate-embeddings": "tsx scripts/generate-embeddings.ts"
+    "generate-embeddings": "tsx scripts/generate-embeddings.ts",
+    "test": "playwright test --project=functional --project=functional-firefox",
+    "test:visual": "playwright test --project=visual",
+    "test:update-snapshots": "playwright test --project=visual --update-snapshots",
+    "test:install": "playwright install chromium firefox"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.90.0",
@@ -33,6 +37,7 @@
     "voyageai": "^0.2.1"
   },
   "devDependencies": {
+    "@playwright/test": "^1.59.1",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",

@@ -11,21 +11,6 @@ export interface Place {
   created_at: string;
 }
 
-export async function getAllPlaces(): Promise<Place[]> {
-  const supabase = createServerClient();
-
-  const { data, error } = await supabase
-    .from("places")
-    .select("*")
-    .order("list_name");
-
-  if (error) {
-    throw new Error(`Failed to fetch places: ${error.message}`);
-  }
-
-  return data || [];
-}
-
 export async function searchPlacesByEmbedding(
   embedding: number[],
   topK = 30
@@ -87,6 +72,26 @@ const LOCATION_MAP: Array<{ keywords: string[]; pattern: string }> = [
   {
     keywords: ["sài gòn", "saigon", "hcm", "hồ chí minh", "ho chi minh"],
     pattern: "sài gòn",
+  },
+  {
+    keywords: ["hải phòng", "hai phong"],
+    pattern: "hoa phượng",
+  },
+  {
+    keywords: ["huế", "hue"],
+    pattern: "huế",
+  },
+  {
+    keywords: ["ninh bình", "ninh binh"],
+    pattern: "ninh bình",
+  },
+  {
+    keywords: ["sapa", "sa pa"],
+    pattern: "sapa",
+  },
+  {
+    keywords: ["quảng bình", "quang binh"],
+    pattern: "quảng bình",
   },
 ];
 

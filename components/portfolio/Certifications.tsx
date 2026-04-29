@@ -32,7 +32,7 @@ export function Certifications() {
           <motion.span
             initial={{ opacity: 0, y: 10 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.6, ease: [0.6, 0, 0.25, 1] }}
             className="text-xs font-semibold text-blue-400 uppercase tracking-widest mb-4 flex items-center gap-2"
           >
             <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden>
@@ -59,7 +59,7 @@ export function Certifications() {
               key={row.name}
               initial={{ opacity: 0, y: 12 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: 0.1 + i * 0.07, ease: [0.6, 0, 0.25, 1] }}
+              transition={{ duration: 0.6, delay: i * 0.08, ease: [0.6, 0, 0.25, 1] }}
             >
               {i === 0 && <div className="border-t border-zinc-800" />}
               {row.href ? (

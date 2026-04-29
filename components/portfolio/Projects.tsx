@@ -1,214 +1,255 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
-import { motion, useInView, AnimatePresence } from "framer-motion";
-import { cn, hexToRgba } from "@/lib/utils";
-import { ChevronDown, ArrowUpRight } from "lucide-react";
+import React, { useRef } from "react";
+import Link from "next/link";
+import { motion, useInView } from "framer-motion";
+import { ArrowUpRight } from "lucide-react";
+import { cn } from "@/lib/utils";
 import resume from "@/data/resume.json";
 
-const GLOW_COLORS = ["#3B82F6", "#1D4ED8"];
+const MotionLink = motion(Link);
 
-const glowVars = {
-  "--glow-color":    hexToRgba(GLOW_COLORS[0], 1.0),
-  "--glow-color-60": hexToRgba(GLOW_COLORS[0], 0.6),
-  "--glow-color-50": hexToRgba(GLOW_COLORS[0], 0.5),
-  "--glow-color-40": hexToRgba(GLOW_COLORS[0], 0.4),
-  "--glow-color-30": hexToRgba(GLOW_COLORS[0], 0.3),
-  "--glow-color-b":    hexToRgba(GLOW_COLORS[1], 1.0),
-  "--glow-color-b-60": hexToRgba(GLOW_COLORS[1], 0.6),
-  "--cone-spread": "30",
-  "--border-radius": "16px",
-} as React.CSSProperties;
+type GlowConfig = {
+  w: number;
+  h: number;
+  opacity: number;
+  right?: string;
+  left?: string;
+  top?: string;
+  bottom?: string;
+};
 
+const GALLERY_CONFIG: {
+  col: string;
+  row: string;
+  gradient: string;
+  glow: GlowConfig;
+  titleSize: string;
+  viz: React.ReactNode;
+}[] = [
+  {
+    col: "md:[grid-column:1/3]",
+    row: "md:[grid-row:1/2]",
+    gradient: "linear-gradient(135deg, #0c1e45 0%, #1a3a7a 50%, #0a1530 100%)",
+    glow: { w: 260, h: 260, opacity: 0.22, right: "-60px", top: "-80px" },
+    titleSize: "text-lg md:text-xl",
+    viz: (
+      <svg className="absolute right-6 bottom-14 opacity-[0.18]" width="80" height="50" viewBox="0 0 80 50">
+        <rect x="0"  y="30" width="12" height="20" rx="2" fill="#3B82F6" />
+        <rect x="17" y="18" width="12" height="32" rx="2" fill="#3B82F6" />
+        <rect x="34" y="24" width="12" height="26" rx="2" fill="#3B82F6" />
+        <rect x="51" y="10" width="12" height="40" rx="2" fill="#3B82F6" />
+        <rect x="68" y="4"  width="12" height="46" rx="2" fill="#3B82F6" />
+      </svg>
+    ),
+  },
+  {
+    col: "md:[grid-column:3/4]",
+    row: "md:[grid-row:1/3]",
+    gradient: "linear-gradient(200deg, #071428 0%, #0f2554 55%, #060e1c 100%)",
+    glow: { w: 160, h: 160, opacity: 0.20, left: "-40px", bottom: "-20px" },
+    titleSize: "text-base",
+    viz: (
+      <svg className="absolute right-3 top-5 opacity-[0.18]" width="60" height="80" viewBox="0 0 60 80">
+        <polyline points="10,70 20,52 30,38 40,25 50,12" fill="none" stroke="#3B82F6" strokeWidth="2.5" strokeLinecap="round" />
+        {([10,20,30,40,50] as number[]).map((x, i) => (
+          <circle key={i} cx={x} cy={([70,52,38,25,12] as number[])[i]} r="3" fill="#3B82F6" />
+        ))}
+      </svg>
+    ),
+  },
+  {
+    col: "md:[grid-column:1/2]",
+    row: "md:[grid-row:2/4]",
+    gradient: "linear-gradient(160deg, #101e48 0%, #0e285e 50%, #080f28 100%)",
+    glow: { w: 180, h: 180, opacity: 0.18, right: "-50px", top: "40px" },
+    titleSize: "text-base",
+    viz: (
+      <svg className="absolute left-4 top-5 opacity-[0.18]" width="54" height="54" viewBox="0 0 54 54">
+        <circle cx="27" cy="27" r="20" fill="none" stroke="#3B82F6" strokeWidth="6" strokeDasharray="50 76" strokeDashoffset="-6" />
+        <circle cx="27" cy="27" r="20" fill="none" stroke="#1D4ED8" strokeWidth="6" strokeDasharray="38 88" strokeDashoffset="-62" />
+        <circle cx="27" cy="27" r="20" fill="none" stroke="#93C5FD" strokeWidth="6" strokeDasharray="32 94" strokeDashoffset="-104" />
+      </svg>
+    ),
+  },
+  {
+    col: "md:[grid-column:2/3]",
+    row: "md:[grid-row:2/3]",
+    gradient: "linear-gradient(115deg, #0a1c3e 0%, #152f6a 55%, #070e22 100%)",
+    glow: { w: 100, h: 100, opacity: 0.22, left: "-20px", top: "-20px" },
+    titleSize: "text-sm",
+    viz: (
+      <svg className="absolute right-3 top-3 opacity-[0.18]" width="48" height="48" viewBox="0 0 48 48">
+        {([[8,38],[16,28],[22,32],[30,18],[36,22],[42,10]] as [number,number][]).map(([cx,cy],i) => (
+          <circle key={i} cx={cx} cy={cy} r={i%2===0?2.5:2} fill="#3B82F6" />
+        ))}
+      </svg>
+    ),
+  },
+  {
+    col: "md:[grid-column:2/4]",
+    row: "md:[grid-row:3/4]",
+    gradient: "linear-gradient(150deg, #08111f 0%, #0c1e40 45%, #111e42 100%)",
+    glow: { w: 200, h: 200, opacity: 0.16, left: "-40px", top: "-60px" },
+    titleSize: "text-base",
+    viz: (
+      <svg className="absolute right-5 top-4 opacity-[0.18]" width="110" height="40" viewBox="0 0 110 40">
+        <rect x="0"  y="14" width="22" height="12" rx="4" fill="#1D4ED8" />
+        <line x1="22" y1="20" x2="32" y2="20" stroke="#3B82F6" strokeWidth="1.5" />
+        <rect x="32" y="14" width="22" height="12" rx="4" fill="#2563EB" />
+        <line x1="54" y1="20" x2="64" y2="20" stroke="#3B82F6" strokeWidth="1.5" />
+        <rect x="64" y="14" width="22" height="12" rx="4" fill="#3B82F6" />
+        <line x1="86" y1="20" x2="96" y2="20" stroke="#60A5FA" strokeWidth="1.5" />
+        <rect x="96" y="14" width="14" height="12" rx="4" fill="#60A5FA" />
+      </svg>
+    ),
+  },
+];
 
-const colSpans = [2, 1, 1, 2, 3];
-
-function GlowCard({ children, index, isInView, span, onClick }: {
-  children: React.ReactNode;
+type GalleryCardProps = {
+  project: (typeof resume.projects)[number];
+  config: {
+    col: string;
+    row: string;
+    gradient: string;
+    glow: GlowConfig;
+    titleSize: string;
+    viz: React.ReactNode;
+  };
   index: number;
   isInView: boolean;
-  span: number;
-  onClick: () => void;
-}) {
-  const cardRef = useRef<HTMLDivElement>(null);
+};
 
-  const handlePointerMove = useCallback((e: React.PointerEvent) => {
-    const el = cardRef.current;
-    if (!el) return;
-    const rect = el.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    const cx = rect.width / 2;
-    const cy = rect.height / 2;
-    const dx = x - cx, dy = y - cy;
-    const kx = dx !== 0 ? cx / Math.abs(dx) : Infinity;
-    const ky = dy !== 0 ? cy / Math.abs(dy) : Infinity;
-    const proximity = Math.min(Math.max(1 / Math.min(kx, ky), 0), 1) * 100;
-    let angle = Math.atan2(dy, dx) * (180 / Math.PI) + 90;
-    if (angle < 0) angle += 360;
-    el.style.setProperty("--edge-proximity", proximity.toFixed(2));
-    el.style.setProperty("--cursor-angle", `${angle.toFixed(2)}deg`);
-  }, []);
+function GalleryCard({ project, config, index, isInView }: GalleryCardProps) {
+  const { col, row, gradient, glow, titleSize, viz } = config;
 
-  const handlePointerLeave = useCallback(() => {
-    cardRef.current?.style.setProperty("--edge-proximity", "0");
-  }, []);
+  const glowStyle: React.CSSProperties = {
+    width: glow.w,
+    height: glow.h,
+    background: "#3B82F6",
+    filter: "blur(50px)",
+    opacity: glow.opacity,
+    right:  glow.right,
+    left:   glow.left,
+    top:    glow.top,
+    bottom: glow.bottom,
+  };
 
   return (
-    <motion.div
-      ref={cardRef}
-      initial={{ opacity: 0, scale: 0.97 }}
-      animate={isInView ? { opacity: 1, scale: 1 } : {}}
-      transition={{ duration: 0.6, delay: 0.08 * index, ease: [0.6, 0, 0.25, 1] }}
+    <MotionLink
+      href={project.slug ? `/projects/${project.slug}` : "#"}
+      initial={{ opacity: 0, y: 20 }}
+      animate={isInView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.6, delay: index * 0.08, ease: [0.6, 0, 0.25, 1] }}
       className={cn(
-        "group relative rounded-2xl overflow-hidden cursor-pointer",
-        "bg-zinc-900 transition-all duration-200",
-        "hover:shadow-[0_8px_24px_rgba(0,0,0,0.4)]",
-        span === 3 ? "md:col-span-3" : span === 2 ? "md:col-span-2" : "col-span-1"
+        "group relative rounded-[14px] overflow-hidden cursor-pointer",
+        "transition-[transform,box-shadow] duration-[450ms]",
+        "[transition-timing-function:cubic-bezier(0.16,1,0.3,1)]",
+        "hover:-translate-y-1 hover:scale-[1.01] hover:shadow-[0_16px_40px_rgba(0,0,0,0.6)]",
+        col, row,
       )}
-      style={glowVars}
-      onClick={onClick}
-      onPointerMove={handlePointerMove}
-      onPointerLeave={handlePointerLeave}
+      style={{ background: gradient }}
     >
-      <span className="bgb-edge-light" />
-      {children}
-    </motion.div>
+      {/* Grid texture */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          backgroundImage:
+            "linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px)",
+          backgroundSize: "22px 22px",
+        }}
+      />
+      {/* Glow blob */}
+      <div className="absolute rounded-full pointer-events-none" style={glowStyle} />
+      {/* Static viz motif */}
+      {viz}
+      {/* Content overlay */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{ background: "linear-gradient(to top, rgba(0,0,0,0.72) 0%, transparent 55%)" }}
+      />
+      {/* Top border glow on hover */}
+      <div
+        className="absolute top-0 left-0 right-0 h-px opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+        style={{ background: "linear-gradient(90deg, transparent, #3B82F6, transparent)" }}
+      />
+      {/* Arrow */}
+      <div
+        className="absolute top-3.5 right-3.5 z-10 w-7 h-7 rounded-full flex items-center justify-center opacity-0 scale-75 group-hover:opacity-100 group-hover:scale-100 transition-all duration-300"
+        style={{ background: "rgba(59,130,246,0.15)", border: "1px solid rgba(96,165,250,0.3)" }}
+      >
+        <ArrowUpRight className="w-3.5 h-3.5 text-blue-300" />
+      </div>
+      {/* Card content */}
+      <div className="absolute inset-0 z-10 flex flex-col justify-end p-[18px]">
+        <div className="text-[9px] font-bold text-blue-400 tracking-[0.22em] uppercase mb-[5px]">
+          {String(index + 1).padStart(2, "0")}
+        </div>
+        <h3 className={cn("font-extrabold text-white tracking-[-0.025em] leading-tight mb-2", titleSize)}>
+          {project.name}
+        </h3>
+        <div className="flex flex-wrap gap-1.5">
+          {project.tech.slice(0, 4).map(t => (
+            <span
+              key={t}
+              className="text-[9px] rounded px-1.5 py-0.5"
+              style={{
+                background: "rgba(59,130,246,0.18)",
+                border: "1px solid rgba(96,165,250,0.25)",
+                color: "rgba(147,197,253,0.9)",
+              }}
+            >
+              {t}
+            </span>
+          ))}
+        </div>
+      </div>
+    </MotionLink>
   );
 }
 
 export function Projects() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-80px" });
-  const [expanded, setExpanded] = useState<number | null>(null);
 
   return (
     <section id="projects" className="relative py-24 md:py-32 px-6">
-
-
       <div className="relative z-10 max-w-6xl mx-auto">
         <div ref={ref} className="mb-12">
           <motion.span
             initial={{ opacity: 0, y: 10 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.6, ease: [0.6, 0, 0.25, 1] }}
             className="text-xs font-semibold text-blue-400 uppercase tracking-widest mb-4 flex items-center gap-2"
           >
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden><path d="M6 0l1.5 4.5L12 6l-4.5 1.5L6 12 4.5 7.5 0 6l4.5-1.5z" fill="currentColor" /></svg>
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden>
+              <path d="M6 0l1.5 4.5L12 6l-4.5 1.5L6 12 4.5 7.5 0 6l4.5-1.5z" fill="currentColor" />
+            </svg>
             <span className="shine-text">Work</span>
           </motion.span>
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.05 }}
+            transition={{ duration: 0.6, delay: 0.05, ease: [0.6, 0, 0.25, 1] }}
             className="text-4xl md:text-5xl font-bold text-zinc-100"
           >
             Projects
           </motion.h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-          {resume.projects.map((project, index) => {
-            const isExpanded = expanded === index;
-            const span = colSpans[index];
-            const spanTwo = span >= 2;
-
-            return (
-              <GlowCard
-                key={project.name}
-                index={index}
-                isInView={isInView}
-                span={span}
-                onClick={() => setExpanded(isExpanded ? null : index)}
-              >
-                {/* Dot pattern on hover */}
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[length:4px_4px]" />
-                </div>
-
-                <div className="relative p-6">
-                  {/* Header row */}
-                  <div className="flex items-start justify-between mb-3">
-                    <span className="text-xs font-bold uppercase tracking-widest text-blue-400">
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
-                    <div className="flex items-center gap-2">
-                      {project.slug && (
-                        <a
-                          href={`/projects/${project.slug}`}
-                          onClick={(e) => e.stopPropagation()}
-                          className="text-zinc-600 hover:text-zinc-300 transition-colors duration-150"
-                          aria-label={`View details for ${project.name}`}
-                        >
-                          <ArrowUpRight className="w-4 h-4" />
-                        </a>
-                      )}
-                      <motion.div
-                        animate={{ rotate: isExpanded ? 180 : 0 }}
-                        transition={{ duration: 0.3 }}
-                      >
-                        <ChevronDown className="w-4 h-4 text-zinc-600 group-hover:text-zinc-400 transition-colors" />
-                      </motion.div>
-                    </div>
-                  </div>
-
-                  {/* Title */}
-                  <h3 className="font-bold text-zinc-100 text-base md:text-lg mb-2 leading-snug group-hover:text-white transition-colors">
-                    {project.name}
-                  </h3>
-
-                  {/* Description */}
-                  <p className="text-sm text-zinc-500 leading-relaxed mb-4 line-clamp-2">
-                    {project.description}
-                  </p>
-
-                  {/* Tech tags */}
-                  <div className="flex flex-wrap gap-1.5 mb-2">
-                    {project.tech.slice(0, spanTwo ? 6 : 4).map((t) => (
-                      <span
-                        key={t}
-                        className="text-xs px-2 py-0.5 rounded-md bg-zinc-800 border border-zinc-700 text-zinc-400"
-                      >
-                        {t}
-                      </span>
-                    ))}
-                    {project.tech.length > (spanTwo ? 6 : 4) && (
-                      <span className="text-xs px-2 py-0.5 rounded-md bg-zinc-800 border border-zinc-700 text-zinc-600">
-                        +{project.tech.length - (spanTwo ? 6 : 4)}
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Expandable bullets */}
-                  <AnimatePresence>
-                    {isExpanded && (
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.6, ease: [0.6, 0, 0.25, 1] }}
-                        className="overflow-hidden"
-                      >
-                        <div className="pt-3 mt-3 border-t border-zinc-800 space-y-2">
-                          {project.bullets.map((bullet, i) => (
-                            <div key={i} className="flex items-start gap-2.5 text-sm text-zinc-400">
-                              <span className="flex-shrink-0 w-1 h-1 rounded-full bg-blue-500 mt-2" />
-                              {bullet}
-                            </div>
-                          ))}
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-
-                  {/* Explore hint */}
-                  <div className="mt-3 text-xs text-zinc-700 group-hover:text-zinc-500 transition-colors">
-                    {isExpanded ? "Click to collapse ↑" : "Click to expand →"}
-                  </div>
-                </div>
-              </GlowCard>
-            );
-          })}
+        <div
+          className="grid grid-cols-1 md:grid-cols-3 gap-[10px]"
+          style={{ gridTemplateRows: "200px 140px 160px" }}
+        >
+          {resume.projects.slice(0, 5).map((project, i) => (
+            <GalleryCard
+              key={project.name}
+              project={project}
+              config={GALLERY_CONFIG[i]}
+              index={i}
+              isInView={isInView}
+            />
+          ))}
         </div>
       </div>
     </section>

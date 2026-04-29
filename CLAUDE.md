@@ -69,7 +69,7 @@ components/
     Footer.tsx         ← Name, LinkedIn + GitHub icons, link to /places
   places/
     PlaceSearch.tsx    ← Search input + triggers API call
-    PlaceCard.tsx      ← Individual place result card
+    PlaceCard.tsx      ← PlaceSuggestion type definition
 
 data/
   resume.json          ← SOURCE OF TRUTH for all portfolio content (projects, skills, certs, education)
@@ -77,7 +77,7 @@ data/
 lib/
   supabase.ts          ← Lazy client init (getSupabaseClient / createServerClient)
   claude.ts            ← Anthropic Claude API client (server-only)
-  places.ts            ← getAllPlaces() + normalizePlaces() from Supabase
+  places.ts            ← searchPlacesByEmbedding() + normalizePlaces() + detectLocationPattern() from Supabase
   utils.ts             ← cn() (clsx + tailwind-merge) + hexToRgba() helpers
 ```
 
@@ -117,7 +117,7 @@ Section order (top → bottom):
 5. **Certifications** — `id="certifications"`, 3 cards + education row
 6. **Footer**
 
-Section nav dots (right side, `SectionNav`): About → Skills → Projects → Certs
+Section nav dots (right side, `SectionNav`): About → Skills → Projects → Testimonials → Certs → Contact
 
 ---
 
