@@ -1,10 +1,13 @@
 "use client";
 
 import React, { useRef } from "react";
+import Link from "next/link";
 import { motion, useInView } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import resume from "@/data/resume.json";
+
+const MotionLink = motion(Link);
 
 type GlowConfig = {
   w: number;
@@ -133,8 +136,8 @@ function GalleryCard({ project, config, index, isInView }: GalleryCardProps) {
   };
 
   return (
-    <motion.a
-      href={project.slug ? `/projects/${project.slug}` : undefined}
+    <MotionLink
+      href={project.slug ? `/projects/${project.slug}` : "#"}
       initial={{ opacity: 0, y: 20 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.6, delay: index * 0.08, ease: [0.6, 0, 0.25, 1] }}
@@ -201,7 +204,7 @@ function GalleryCard({ project, config, index, isInView }: GalleryCardProps) {
           ))}
         </div>
       </div>
-    </motion.a>
+    </MotionLink>
   );
 }
 

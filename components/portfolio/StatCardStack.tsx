@@ -84,6 +84,7 @@ function BarsViz({ isActive }: { isActive: boolean }) {
 
   useEffect(() => {
     if (!isActive) return;
+    setCycle(c => c + 1);  // restart bars immediately when card becomes active
     const t = setInterval(() => setCycle(c => c + 1), 2600);
     return () => clearInterval(t);
   }, [isActive]);
@@ -190,7 +191,7 @@ function DonutViz({ isActive }: { isActive: boolean }) {
     if (!isActive) { setFading(false); return; }
     setFading(false);
     const fadeT  = setTimeout(() => setFading(true),              2800);
-    const cycleT = setTimeout(() => setCycle(c => c + 1),         3300);
+    const cycleT = setTimeout(() => setCycle(c => c + 1),         3600);
     return () => { clearTimeout(fadeT); clearTimeout(cycleT); };
   }, [isActive, cycle]);
 
