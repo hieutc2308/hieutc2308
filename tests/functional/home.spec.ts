@@ -138,8 +138,11 @@ test.describe('Portfolio Home', () => {
     await page.locator('#projects').scrollIntoViewIfNeeded()
     const card = page.locator('#projects a[href^="/projects/"]').first()
     await expect(card).toBeVisible()
-    await card.click()
-    await expect(page).toHaveURL(/\/projects\//)
+    await expect(card).toBeInViewport()
+    await Promise.all([
+      page.waitForURL(/\/projects\//),
+      card.click(),
+    ])
     await expect(page.locator('h1').first()).toBeVisible()
   })
 
