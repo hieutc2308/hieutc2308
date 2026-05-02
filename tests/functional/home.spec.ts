@@ -95,6 +95,27 @@ test.describe('Portfolio Home', () => {
     ).toBeVisible()
   })
 
+  test('mobile homepage has no horizontal overflow', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 })
+    await page.goto('/')
+    await page.waitForLoadState('networkidle')
+
+    const dimensions = await page.evaluate(() => ({
+      scrollWidth: document.documentElement.scrollWidth,
+      clientWidth: document.documentElement.clientWidth,
+    }))
+
+    expect(dimensions.scrollWidth).toBeLessThanOrEqual(dimensions.clientWidth)
+  })
+
+  test('mobile section nav does not compete with hero content', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 })
+    await page.goto('/')
+
+    await expect(page.getByRole('button', { name: 'Navigate to About' })).toBeHidden()
+    await expect(page.locator('h1').first()).toBeVisible()
+  })
+
   // ── Skills ─────────────────────────────────────────────────────────────────
 
   test('skills section renders SVG orbital timeline', async ({ page }) => {

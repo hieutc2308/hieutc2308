@@ -5,6 +5,13 @@ import { useRef } from "react";
 import { HyperTextParagraph } from "@/components/ui/hyper-text-paragraph";
 import { StatCardStack } from "@/components/portfolio/StatCardStack";
 
+const metrics = [
+  { value: "6+", label: "Years turning BI requests into production dashboards" },
+  { value: "5+", label: "Portfolio projects across healthcare, retail, and workforce data" },
+  { value: "3", label: "Verified analytics and BI credentials" },
+  { value: "3", label: "Industry verticals with operational reporting experience" },
+];
+
 export function About() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
@@ -14,7 +21,7 @@ export function About() {
 
 
       <div className="relative z-10 max-w-6xl mx-auto">
-        <div ref={ref} className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+        <div ref={ref} className="grid grid-cols-1 md:grid-cols-[1fr_0.92fr] gap-12 items-center">
           {/* Text */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
@@ -38,6 +45,22 @@ export function About() {
               ]}
               highlightWords={["6 years of experience", "Power BI solutions", "strategic insights"]}
             />
+
+            <div className="mt-8 grid grid-cols-2 gap-3">
+              {metrics.map((metric) => (
+                <div
+                  key={metric.label}
+                  className="rounded-2xl border border-white/[0.08] bg-zinc-950/60 p-4"
+                >
+                  <div className="text-3xl font-extrabold leading-none text-zinc-100">
+                    {metric.value}
+                  </div>
+                  <div className="mt-2 text-xs leading-relaxed text-zinc-400">
+                    {metric.label}
+                  </div>
+                </div>
+              ))}
+            </div>
           </motion.div>
 
           {/* Stat card stack */}

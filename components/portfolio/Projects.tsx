@@ -7,7 +7,7 @@ import { ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import resume from "@/data/resume.json";
 
-const MotionLink = motion(Link);
+const MotionLink = motion.create(Link);
 
 type GlowConfig = {
   w: number;
@@ -146,6 +146,7 @@ function GalleryCard({ project, config, index, isInView }: GalleryCardProps) {
         "transition-[transform,box-shadow] duration-[450ms]",
         "[transition-timing-function:cubic-bezier(0.16,1,0.3,1)]",
         "hover:-translate-y-1 hover:scale-[1.01] hover:shadow-[0_16px_40px_rgba(0,0,0,0.6)]",
+        "min-h-64 md:min-h-0",
         col, row,
       )}
       style={{ background: gradient }}
@@ -182,12 +183,20 @@ function GalleryCard({ project, config, index, isInView }: GalleryCardProps) {
       </div>
       {/* Card content */}
       <div className="absolute inset-0 z-10 flex flex-col justify-end p-[18px]">
-        <div className="text-[9px] font-bold text-blue-400 tracking-[0.22em] uppercase mb-[5px]">
-          {String(index + 1).padStart(2, "0")}
+        <div className="mb-[5px] flex items-center justify-between gap-3">
+          <div className="text-[9px] font-bold text-blue-400 tracking-[0.22em] uppercase">
+            {String(index + 1).padStart(2, "0")}
+          </div>
+          <div className="rounded-full border border-white/10 bg-black/20 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-[0.12em] text-zinc-300">
+            Case Study
+          </div>
         </div>
         <h3 className={cn("font-extrabold text-white tracking-[-0.025em] leading-tight mb-2", titleSize)}>
           {project.name}
         </h3>
+        <p className="mb-3 line-clamp-2 text-xs leading-relaxed text-zinc-300/90">
+          {project.description}
+        </p>
         <div className="flex flex-wrap gap-1.5">
           {project.tech.slice(0, 4).map(t => (
             <span
@@ -215,7 +224,7 @@ export function Projects() {
   return (
     <section id="projects" className="relative py-24 md:py-32 px-6">
       <div className="relative z-10 max-w-6xl mx-auto">
-        <div ref={ref} className="mb-12">
+        <div ref={ref} className="mb-12 max-w-2xl">
           <motion.span
             initial={{ opacity: 0, y: 10 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
@@ -235,11 +244,18 @@ export function Projects() {
           >
             Projects
           </motion.h2>
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.1, ease: [0.6, 0, 0.25, 1] }}
+            className="mt-4 text-base leading-relaxed text-zinc-400"
+          >
+            Selected work focused on analytics platforms, governance, and operational reporting.
+          </motion.p>
         </div>
 
         <div
-          className="grid grid-cols-1 md:grid-cols-3 gap-[10px]"
-          style={{ gridTemplateRows: "200px 140px 160px" }}
+          className="grid grid-cols-1 gap-3 md:grid-cols-3 md:gap-[10px] md:[grid-template-rows:220px_160px_180px]"
         >
           {resume.projects.slice(0, 5).map((project, i) => (
             <GalleryCard

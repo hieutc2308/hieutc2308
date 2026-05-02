@@ -50,7 +50,7 @@ export function SectionNav({ sections }: SectionNavProps) {
   };
 
   return (
-    <nav className="fixed right-8 top-1/2 -translate-y-1/2 z-40 flex flex-col items-end gap-5">
+    <nav className="fixed right-6 lg:right-8 top-1/2 -translate-y-1/2 z-40 hidden md:flex flex-col items-end gap-5">
       {sections.map(({ id, label }) => {
         const isActive = active === id;
         const isHovered = hovered === id;
