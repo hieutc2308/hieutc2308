@@ -50,27 +50,9 @@ export function Hero() {
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.25, ease: [0.6, 0, 0.25, 1] }}
-          className="mb-10 grid w-full max-w-2xl grid-cols-3 overflow-hidden rounded-2xl border border-white/[0.08] bg-zinc-950/50 text-left"
-        >
-          {[
-            ["6+", "Years"],
-            ["5+", "Projects"],
-            ["3", "Certs"],
-          ].map(([value, label]) => (
-            <div key={label} className="border-r border-white/[0.08] px-4 py-3 last:border-r-0">
-              <div className="text-2xl font-extrabold leading-none text-zinc-100">{value}</div>
-              <div className="mt-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-zinc-500">{label}</div>
-            </div>
-          ))}
-        </motion.div>
-
-        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.35, ease: [0.6, 0, 0.25, 1] }}
+          transition={{ duration: 0.6, delay: 0.25, ease: [0.6, 0, 0.25, 1] }}
           className="flex flex-col sm:flex-row items-center gap-4"
         >
           <BorderGlowButton

@@ -95,6 +95,13 @@ test.describe('Portfolio Home', () => {
     ).toBeVisible()
   })
 
+  test('hero does not duplicate portfolio metrics', async ({ page }) => {
+    const hero = page.locator('main > section').first()
+    await expect(hero.getByText('Years', { exact: true })).toHaveCount(0)
+    await expect(hero.getByText('Projects', { exact: true })).toHaveCount(0)
+    await expect(hero.getByText('Certs', { exact: true })).toHaveCount(0)
+  })
+
   test('mobile homepage has no horizontal overflow', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 })
     await page.goto('/')
@@ -144,6 +151,23 @@ test.describe('Portfolio Home', () => {
       card.click(),
     ])
     await expect(page.locator('h1').first()).toBeVisible()
+  })
+
+  test('project cards are large showcase panels', async ({ page }) => {
+    await page.locator('#projects').scrollIntoViewIfNeeded()
+    const firstCard = page.locator('#projects a[href^="/projects/"]').first()
+    await expect(firstCard).toBeVisible()
+
+    const box = await firstCard.boundingBox()
+    expect(box?.height).toBeGreaterThanOrEqual(300)
+  })
+
+  // ── Testimonials ───────────────────────────────────────────────────────────
+
+  test('testimonials keep carousel navigation controls', async ({ page }) => {
+    await page.locator('#testimonials').scrollIntoViewIfNeeded()
+    await expect(page.locator('#testimonial-prev')).toBeVisible()
+    await expect(page.locator('#testimonial-next')).toBeVisible()
   })
 
   // ── Footer ─────────────────────────────────────────────────────────────────

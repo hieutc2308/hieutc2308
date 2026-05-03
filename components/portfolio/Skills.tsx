@@ -16,7 +16,6 @@ import {
   Cloud,
   GitBranch,
 } from "lucide-react";
-import resume from "@/data/resume.json";
 
 const skillsData: OrbitalItem[] = [
   {
@@ -85,7 +84,7 @@ export function Skills() {
 
 
       <div className="relative z-10 max-w-6xl mx-auto">
-        <div ref={ref} className="mb-10 max-w-2xl">
+        <div ref={ref} className="mb-6">
           <motion.span
             initial={{ opacity: 0, y: 10 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
@@ -103,52 +102,15 @@ export function Skills() {
           >
             Skills
           </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="mt-4 text-base leading-relaxed text-zinc-400"
-          >
-            A practical BI stack for semantic modeling, governed reporting, and reliable data pipelines.
-          </motion.p>
         </div>
 
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7, delay: 0.15 }}
-            className="grid grid-cols-1 gap-3 sm:grid-cols-2"
-          >
-            {resume.skills.map((skill) => (
-              <div
-                key={skill.category}
-                className="rounded-2xl border border-white/[0.08] bg-zinc-950/60 p-4 transition-colors duration-200 hover:border-blue-500/30"
-              >
-                <h3 className="text-sm font-semibold text-zinc-100">{skill.category}</h3>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {skill.tools.map((tool) => (
-                    <span
-                      key={tool}
-                      className="rounded-full border border-zinc-800 bg-zinc-900/80 px-2.5 py-1 text-xs font-medium text-zinc-300"
-                    >
-                      {tool}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={isInView ? { opacity: 1, scale: 1 } : {}}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="min-w-0"
-          >
-            <RadialOrbitalTimeline timelineData={skillsData} />
-          </motion.div>
-        </div>
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={isInView ? { opacity: 1, scale: 1 } : {}}
+          transition={{ duration: 0.8, delay: 0.2 }}
+        >
+          <RadialOrbitalTimeline timelineData={skillsData} />
+        </motion.div>
       </div>
     </section>
   );

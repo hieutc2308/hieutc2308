@@ -9,9 +9,9 @@ const ADVANCE_MS = 3500;
 
 const STACK_POSITIONS = [
   { tx: 0,  scale: 1,    opacity: 1,    zIndex: 4 },
-  { tx: 22, scale: 0.95, opacity: 0.60, zIndex: 3 },
-  { tx: 40, scale: 0.90, opacity: 0.28, zIndex: 2 },
-  { tx: 56, scale: 0.86, opacity: 0,    zIndex: 1 },
+  { tx: 28, scale: 0.95, opacity: 0.55, zIndex: 3 },
+  { tx: 52, scale: 0.90, opacity: 0.24, zIndex: 2 },
+  { tx: 72, scale: 0.86, opacity: 0,    zIndex: 1 },
 ] as const;
 
 const CARDS = [
@@ -84,9 +84,12 @@ function BarsViz({ isActive }: { isActive: boolean }) {
 
   useEffect(() => {
     if (!isActive) return;
-    setCycle(c => c + 1);  // restart bars immediately when card becomes active
+    const restart = requestAnimationFrame(() => setCycle(c => c + 1));
     const t = setInterval(() => setCycle(c => c + 1), 2600);
-    return () => clearInterval(t);
+    return () => {
+      cancelAnimationFrame(restart);
+      clearInterval(t);
+    };
   }, [isActive]);
 
   return (
@@ -188,11 +191,14 @@ function DonutViz({ isActive }: { isActive: boolean }) {
   const [fading, setFading] = useState(false);
 
   useEffect(() => {
-    if (!isActive) { setFading(false); return; }
-    setFading(false);
+    if (!isActive) {
+      const resetT = setTimeout(() => setFading(false), 0);
+      return () => clearTimeout(resetT);
+    }
+    const resetT = setTimeout(() => setFading(false), 0);
     const fadeT  = setTimeout(() => setFading(true),              2800);
     const cycleT = setTimeout(() => setCycle(c => c + 1),         3600);
-    return () => { clearTimeout(fadeT); clearTimeout(cycleT); };
+    return () => { clearTimeout(resetT); clearTimeout(fadeT); clearTimeout(cycleT); };
   }, [isActive, cycle]);
 
   return (
@@ -303,21 +309,21 @@ export function StatCardStack() {
   }, [setQueue, startTimer]);
 
   return (
-    <div>
-      {/* Clip wrapper — hides the peeking cards' overflow on the right */}
+    <div className="mx-auto w-full max-w-[560px]">
+      {/* Clip wrapper - hides the peeking cards' overflow on the right */}
       <div
-        className="overflow-hidden rounded-2xl cursor-pointer"
-        style={{ paddingRight: 52, marginRight: -52 }}
+        className="overflow-hidden rounded-[1.35rem] cursor-pointer"
+        style={{ paddingRight: 76, marginRight: -76 }}
         onClick={handleClick}
       >
-        <div className="relative h-60">
+        <div className="relative h-[300px] sm:h-[340px]">
           {queue.map((cardIdx, pos) => {
             const { tx, scale, opacity, zIndex } = STACK_POSITIONS[pos];
             const isFlying = flyingIdx === cardIdx;
             return (
               <div
                 key={cardIdx}
-                className="absolute inset-0 rounded-2xl border border-white/[0.09] bg-[#111113] p-6 flex flex-col overflow-hidden"
+                className="absolute inset-0 rounded-[1.35rem] border border-white/[0.1] bg-[#111113] p-6 sm:p-7 flex flex-col overflow-hidden"
                 style={{
                   zIndex,
                   pointerEvents: pos === 0 ? "auto" : "none",
@@ -330,7 +336,7 @@ export function StatCardStack() {
                     : {
                         transform: `translateX(${tx}px) scale(${scale})`,
                         opacity,
-                        boxShadow: pos === 0 ? "0 12px 40px rgba(0,0,0,0.55)" : "none",
+                        boxShadow: pos === 0 ? "0 22px 70px rgba(0,0,0,0.58)" : "none",
                         transition: "transform 550ms cubic-bezier(0.16,1,0.3,1), opacity 550ms cubic-bezier(0.16,1,0.3,1), box-shadow 550ms",
                       }),
                 }}
@@ -349,13 +355,13 @@ export function StatCardStack() {
                     animation: "scanLine 3s linear infinite",
                   }}
                 />
-                <div className="text-[9px] font-bold text-blue-400 tracking-[0.22em] uppercase mb-1.5">
+                <div className="text-[10px] font-bold text-blue-400 tracking-[0.22em] uppercase mb-2">
                   {CARDS[cardIdx].num}
                 </div>
-                <div className="text-5xl font-extrabold text-zinc-100 tracking-[-0.05em] leading-none mb-1">
+                <div className="text-6xl sm:text-7xl font-extrabold text-zinc-100 tracking-[-0.05em] leading-none mb-2">
                   {CARDS[cardIdx].value}
                 </div>
-                <div className="text-[11px] text-zinc-500 uppercase tracking-[0.1em] mb-4">
+                <div className="text-xs text-zinc-500 uppercase tracking-[0.12em] mb-6">
                   {CARDS[cardIdx].label}
                 </div>
                 <div className="flex-1 min-h-0">
