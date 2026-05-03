@@ -95,6 +95,12 @@ test.describe('Portfolio Home', () => {
     ).toBeVisible()
   })
 
+  test('hero primary CTA uses restrained button styling', async ({ page }) => {
+    const cta = page.getByRole('button', { name: 'See My Work' })
+    await expect(cta).toBeVisible()
+    await expect(cta).not.toHaveClass(/border-glow-btn/)
+  })
+
   test('hero does not duplicate portfolio metrics', async ({ page }) => {
     const hero = page.locator('main > section').first()
     await expect(hero.getByText('Years', { exact: true })).toHaveCount(0)
@@ -121,6 +127,18 @@ test.describe('Portfolio Home', () => {
 
     await expect(page.getByRole('button', { name: 'Navigate to About' })).toBeHidden()
     await expect(page.locator('h1').first()).toBeVisible()
+  })
+
+  // ── About ──────────────────────────────────────────────────────────────────
+
+  test('about metrics are all visible at once', async ({ page }) => {
+    await page.locator('#about').scrollIntoViewIfNeeded()
+    const metrics = page.locator('#about [data-testid="about-metric-card"]')
+    await expect(metrics).toHaveCount(4)
+
+    for (let i = 0; i < 4; i++) {
+      await expect(metrics.nth(i)).toBeVisible()
+    }
   })
 
   // ── Skills ─────────────────────────────────────────────────────────────────

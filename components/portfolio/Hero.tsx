@@ -55,12 +55,12 @@ export function Hero() {
           transition={{ duration: 0.6, delay: 0.25, ease: [0.6, 0, 0.25, 1] }}
           className="flex flex-col sm:flex-row items-center gap-4"
         >
-          <BorderGlowButton
-            animated
+          <button
+            className="rounded-full border border-blue-500/35 bg-blue-500/10 px-8 py-3 text-sm font-semibold text-blue-100 transition-colors duration-200 hover:border-blue-400/60 hover:bg-blue-500/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/60 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
             onClick={() => document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" })}
           >
             See My Work
-          </BorderGlowButton>
+          </button>
 
           <div className="flex items-center gap-3">
             <BorderGlowButton
