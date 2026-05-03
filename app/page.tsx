@@ -23,7 +23,7 @@ export default function HomePage() {
     <>
       <SectionNav sections={sections} />
 
-      <main className="relative z-10">
+      <main className="relative z-10 overflow-x-clip">
         <Hero />
         <About />
         <TechMarquee />

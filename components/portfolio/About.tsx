@@ -14,7 +14,7 @@ export function About() {
 
 
       <div className="relative z-10 max-w-6xl mx-auto">
-        <div ref={ref} className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+        <div ref={ref} className="grid grid-cols-1 gap-14 md:grid-cols-[0.95fr_1.05fr] md:gap-16 md:items-center">
           {/* Text */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
@@ -31,13 +31,14 @@ export function About() {
               <span className="text-zinc-500">based in Hanoi.</span>
             </h2>
             <HyperTextParagraph
-              className="text-base md:text-lg leading-relaxed mt-8"
+              className="text-base md:text-lg leading-relaxed mt-8 text-justify"
               paragraphs={[
                 "With over 6 years of experience, I translate complex, messy data into clear Power BI solutions that drive real results.",
                 "From optimizing DAX to building robust data models, I'm passionate about bridging the gap between raw numbers and the strategic insights that help businesses move forward.",
               ]}
               highlightWords={["6 years of experience", "Power BI solutions", "strategic insights"]}
             />
+
           </motion.div>
 
           {/* Stat card stack */}
@@ -45,6 +46,7 @@ export function About() {
             initial={{ opacity: 0, x: 50 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.7, delay: 0.08, ease: [0.6, 0, 0.25, 1] }}
+            className="md:pl-2"
           >
             <StatCardStack />
           </motion.div>

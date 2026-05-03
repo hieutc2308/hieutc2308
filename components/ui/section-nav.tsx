@@ -50,7 +50,7 @@ export function SectionNav({ sections }: SectionNavProps) {
   };
 
   return (
-    <nav className="fixed right-8 top-1/2 -translate-y-1/2 z-40 flex flex-col items-end gap-5">
+    <nav className="fixed right-4 lg:right-6 top-1/2 -translate-y-1/2 z-40 hidden md:flex flex-col items-end gap-3">
       {sections.map(({ id, label }) => {
         const isActive = active === id;
         const isHovered = hovered === id;
@@ -61,7 +61,7 @@ export function SectionNav({ sections }: SectionNavProps) {
             onClick={() => handleClick(id)}
             onMouseEnter={() => setHovered(id)}
             onMouseLeave={() => setHovered(null)}
-            className="flex items-center gap-3 group py-2 pl-8 -mr-2 cursor-pointer"
+            className="group -mr-3 flex min-h-12 min-w-28 cursor-pointer items-center justify-end gap-3 rounded-full py-2 pl-8 pr-3"
             aria-label={`Navigate to ${label}`}
           >
             {/* Label — always visible for active, visible on hover for others */}

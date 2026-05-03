@@ -49,7 +49,7 @@ app/
 components/
   ui/
     global-grid.tsx          ← Fixed scrolling grid bg (position:fixed, covers ALL pages)
-    section-nav.tsx          ← Fixed right-side dot section navigator with IntersectionObserver
+    section-nav.tsx          ← Fixed right-side dot section navigator with IntersectionObserver; hidden below md to avoid mobile content overlap
     navigation-menu.tsx      ← Collapse-to-pill nav on scroll (AnimatedNav)
     animated-hero.tsx        ← Rotating title words with spring physics
     border-glow-button.tsx   ← Animated glow CTA button (used in Hero)
@@ -61,10 +61,10 @@ components/
     badge.tsx, button.tsx, card.tsx  ← shadcn primitives
     chatgpt-prompt-input.tsx ← Places search textarea
   portfolio/
-    Hero.tsx           ← Full-viewport hero; plasma glow blobs (right top + left bottom); no bg-background on section
-    About.tsx          ← Two-column: HyperTextParagraph text (left), animated stat cards (right)
-    Skills.tsx         ← Radial orbital timeline (dynamic import, ssr:false)
-    Projects.tsx       ← Bento 3-col grid (colSpans=[2,1,1,2,3]), expandable cards
+    Hero.tsx           ← Executive portfolio hero with stable animated role line, proof metrics, plasma glow blobs, no bg-background on section
+    About.tsx          ← Two-column: HyperTextParagraph text + static credibility metrics (left), animated stat cards (right)
+    Skills.tsx         ← Scannable skill category cards + radial orbital timeline (dynamic import, ssr:false)
+    Projects.tsx       ← Outcome-focused bento 3-col grid (colSpans=[2,1,1,2,3]) with descriptions and tech tags
     Certifications.tsx ← 3 cert cards + education row, gradient card backgrounds
     Footer.tsx         ← Name, LinkedIn + GitHub icons, link to /places
   places/
@@ -84,6 +84,13 @@ lib/
 ---
 
 ## Design System
+
+Figma baseline/redesign file: https://www.figma.com/design/E1Kzaa137qgJiucrRpMK8t
+
+Pages in that file:
+- `Current Capture` — generated from the deployed homepage before the refresh
+- `Design System` — compact executive portfolio palette/components
+- `Homepage Redesign` — desktop, tablet, and mobile frames used as the implementation reference
 
 **Always dark mode.** No light mode toggle.
 
@@ -110,14 +117,16 @@ CSS variables live in `app/globals.css`. Key ones: `--primary: #3B82F6`, `--ring
 ## Page Structure (`/`)
 
 Section order (top → bottom):
-1. **Hero** — full viewport, rotating title ("BI Developer" / "Data Analyst" / "Power BI Expert"), mouse-wheel scroll indicator, LinkedIn + GitHub icons (LinkedIn first)
-2. **About** — `id="about"`, text slides from left, stats from right
-3. **Skills** — `id="skills"`, radial orbital timeline
-4. **Projects** — `id="projects"`, bento 3-col grid
-5. **Certifications** — `id="certifications"`, 3 cards + education row
-6. **Footer**
+1. **Hero** — executive summary, stable rotating title ("BI Developer" / "Data Analyst" / "Analytic Engineer"), proof metrics, LinkedIn + GitHub icons (LinkedIn first)
+2. **About** — `id="about"`, text + static credibility metrics from left, animated stat cards from right
+3. **Skills** — `id="skills"`, category cards plus radial orbital timeline
+4. **Projects** — `id="projects"`, outcome-focused bento 3-col grid
+5. **Testimonials** — `id="testimonials"`, static testimonial cards rather than duplicated carousel track
+6. **Certifications** — `id="certifications"`, 3 cards + education row
+7. **Contact** — `id="contact"`, mailto form
+8. **Footer**
 
-Section nav dots (right side, `SectionNav`): About → Skills → Projects → Testimonials → Certs → Contact
+Section nav dots (right side, `SectionNav`): About → Skills → Projects → Testimonials → Certs → Contact. The section nav is hidden below the `md` breakpoint so it does not compete with hero content on mobile.
 
 ---
 

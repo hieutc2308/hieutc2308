@@ -83,6 +83,20 @@ test.describe('Portfolio Home', () => {
     expect(await titles.count()).toBeGreaterThan(0)
   })
 
+  test('long hero role title fits within the hero viewport', async ({ page }) => {
+    await page.setViewportSize({ width: 714, height: 456 })
+    await page.goto('/')
+
+    const role = page.getByText('Analytic Engineer', { exact: true })
+    const box = await role.boundingBox()
+    const fontSize = await role.evaluate((element) => {
+      return Number.parseFloat(window.getComputedStyle(element).fontSize)
+    })
+    expect(box).not.toBeNull()
+    expect((box?.x ?? 0) + (box?.width ?? 0)).toBeLessThanOrEqual(714)
+    expect(fontSize).toBeLessThanOrEqual(48)
+  })
+
   test('hero LinkedIn link is present', async ({ page }) => {
     await expect(
       page.locator('a[href="https://www.linkedin.com/in/hieutc2308/"]').first()
@@ -93,6 +107,62 @@ test.describe('Portfolio Home', () => {
     await expect(
       page.locator('a[href="https://github.com/hieutc"]').first()
     ).toBeVisible()
+  })
+
+  test('hero primary CTA uses restrained button styling', async ({ page }) => {
+    const cta = page.getByRole('button', { name: 'See My Work' })
+    await expect(cta).toBeVisible()
+    await expect(cta).not.toHaveClass(/border-glow-btn/)
+  })
+
+  test('hero does not duplicate portfolio metrics', async ({ page }) => {
+    const hero = page.locator('main > section').first()
+    await expect(hero.getByText('Years', { exact: true })).toHaveCount(0)
+    await expect(hero.getByText('Projects', { exact: true })).toHaveCount(0)
+    await expect(hero.getByText('Certs', { exact: true })).toHaveCount(0)
+  })
+
+  test('mobile homepage has no horizontal overflow', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 })
+    await page.goto('/')
+    await page.waitForLoadState('networkidle')
+
+    const dimensions = await page.evaluate(() => ({
+      scrollWidth: document.documentElement.scrollWidth,
+      clientWidth: document.documentElement.clientWidth,
+    }))
+
+    expect(dimensions.scrollWidth).toBeLessThanOrEqual(dimensions.clientWidth)
+  })
+
+  test('mobile section nav does not compete with hero content', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 })
+    await page.goto('/')
+
+    await expect(page.getByRole('button', { name: 'Navigate to About' })).toBeHidden()
+    await expect(page.locator('h1').first()).toBeVisible()
+  })
+
+  // ── About ──────────────────────────────────────────────────────────────────
+
+  test('about metrics are all visible at once', async ({ page }) => {
+    await page.locator('#about').scrollIntoViewIfNeeded()
+    const metrics = page.locator('#about [data-testid="about-metric-card"]')
+    await expect(metrics).toHaveCount(4)
+
+    for (let i = 0; i < 4; i++) {
+      await expect(metrics.nth(i)).toBeVisible()
+    }
+  })
+
+  test('about paragraphs use justified alignment', async ({ page }) => {
+    await page.locator('#about').scrollIntoViewIfNeeded()
+
+    const alignment = await page.locator('#about p').first().evaluate((element) => {
+      return window.getComputedStyle(element).textAlign
+    })
+
+    expect(alignment).toBe('justify')
   })
 
   // ── Skills ─────────────────────────────────────────────────────────────────
@@ -117,9 +187,29 @@ test.describe('Portfolio Home', () => {
     await page.locator('#projects').scrollIntoViewIfNeeded()
     const card = page.locator('#projects a[href^="/projects/"]').first()
     await expect(card).toBeVisible()
-    await card.click()
-    await expect(page).toHaveURL(/\/projects\//)
+    await expect(card).toBeInViewport()
+    await Promise.all([
+      page.waitForURL(/\/projects\//),
+      card.click(),
+    ])
     await expect(page.locator('h1').first()).toBeVisible()
+  })
+
+  test('project cards are large showcase panels', async ({ page }) => {
+    await page.locator('#projects').scrollIntoViewIfNeeded()
+    const firstCard = page.locator('#projects a[href^="/projects/"]').first()
+    await expect(firstCard).toBeVisible()
+
+    const box = await firstCard.boundingBox()
+    expect(box?.height).toBeGreaterThanOrEqual(300)
+  })
+
+  // ── Testimonials ───────────────────────────────────────────────────────────
+
+  test('testimonials keep carousel navigation controls', async ({ page }) => {
+    await page.locator('#testimonials').scrollIntoViewIfNeeded()
+    await expect(page.locator('#testimonial-prev')).toBeVisible()
+    await expect(page.locator('#testimonial-next')).toBeVisible()
   })
 
   // ── Footer ─────────────────────────────────────────────────────────────────

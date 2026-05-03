@@ -22,22 +22,24 @@ function AnimatedHero({ prefix = "I am a", titles, description }: AnimatedHeroPr
   return (
     <div className="w-full">
       <div className="flex gap-4 flex-col items-center text-center">
-        <h1 className="text-5xl md:text-7xl max-w-3xl tracking-tight font-bold leading-[1.1]">
+        <h1 className="w-full max-w-5xl text-[3rem] sm:text-6xl md:text-7xl tracking-tight font-bold leading-[1.05] sm:leading-[1.1]">
           <span className="text-foreground">{prefix}</span>
-          <span className="relative flex w-full justify-center text-center md:pb-4 md:pt-1" style={{ clipPath: "inset(0 -100vw)" }}>
+          <span
+            className="relative mt-3 flex h-[3.35rem] w-full items-center justify-center overflow-visible text-center sm:h-[4.5rem] md:h-[5.8rem]"
+          >
             &nbsp;
             {titles.map((title, index) => (
               <motion.span
                 key={index}
-                className="absolute font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 whitespace-nowrap"
-                style={{ fontSize: "clamp(1.5rem, 6vw, 4.5rem)", lineHeight: 1.3 }}
-                initial={{ opacity: 0, y: -100 }}
+                className="absolute whitespace-nowrap bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text px-1 font-extrabold text-transparent"
+                style={{ fontSize: "clamp(2rem, 6vw, 4.5rem)", lineHeight: 1.05 }}
+                initial={{ opacity: 0, y: -16 }}
                 transition={{ type: "spring", stiffness: 50 }}
                 animate={
                   titleNumber === index
                     ? { y: 0, opacity: 1 }
                     : {
-                      y: titleNumber > index ? -150 : 150,
+                      y: titleNumber > index ? -18 : 18,
                       opacity: 0,
                     }
                 }
