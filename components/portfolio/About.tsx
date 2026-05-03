@@ -31,7 +31,7 @@ export function About() {
               <span className="text-zinc-500">based in Hanoi.</span>
             </h2>
             <HyperTextParagraph
-              className="text-base md:text-lg leading-relaxed mt-8"
+              className="text-base md:text-lg leading-relaxed mt-8 text-justify"
               paragraphs={[
                 "With over 6 years of experience, I translate complex, messy data into clear Power BI solutions that drive real results.",
                 "From optimizing DAX to building robust data models, I'm passionate about bridging the gap between raw numbers and the strategic insights that help businesses move forward.",

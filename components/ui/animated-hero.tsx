@@ -31,8 +31,8 @@ function AnimatedHero({ prefix = "I am a", titles, description }: AnimatedHeroPr
             {titles.map((title, index) => (
               <motion.span
                 key={index}
-                className="absolute max-w-full whitespace-nowrap bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text px-1 font-extrabold text-transparent"
-                style={{ fontSize: "clamp(2rem, 9vw, 4.5rem)", lineHeight: 1.05 }}
+                className="absolute whitespace-nowrap bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text px-1 font-extrabold text-transparent"
+                style={{ fontSize: "clamp(2rem, 6vw, 4.5rem)", lineHeight: 1.05 }}
                 initial={{ opacity: 0, y: -16 }}
                 transition={{ type: "spring", stiffness: 50 }}
                 animate={

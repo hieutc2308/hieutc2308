@@ -83,6 +83,20 @@ test.describe('Portfolio Home', () => {
     expect(await titles.count()).toBeGreaterThan(0)
   })
 
+  test('long hero role title fits within the hero viewport', async ({ page }) => {
+    await page.setViewportSize({ width: 714, height: 456 })
+    await page.goto('/')
+
+    const role = page.getByText('Analytic Engineer', { exact: true })
+    const box = await role.boundingBox()
+    const fontSize = await role.evaluate((element) => {
+      return Number.parseFloat(window.getComputedStyle(element).fontSize)
+    })
+    expect(box).not.toBeNull()
+    expect((box?.x ?? 0) + (box?.width ?? 0)).toBeLessThanOrEqual(714)
+    expect(fontSize).toBeLessThanOrEqual(48)
+  })
+
   test('hero LinkedIn link is present', async ({ page }) => {
     await expect(
       page.locator('a[href="https://www.linkedin.com/in/hieutc2308/"]').first()
@@ -139,6 +153,16 @@ test.describe('Portfolio Home', () => {
     for (let i = 0; i < 4; i++) {
       await expect(metrics.nth(i)).toBeVisible()
     }
+  })
+
+  test('about paragraphs use justified alignment', async ({ page }) => {
+    await page.locator('#about').scrollIntoViewIfNeeded()
+
+    const alignment = await page.locator('#about p').first().evaluate((element) => {
+      return window.getComputedStyle(element).textAlign
+    })
+
+    expect(alignment).toBe('justify')
   })
 
   // ── Skills ─────────────────────────────────────────────────────────────────
