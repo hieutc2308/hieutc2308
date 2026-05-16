@@ -39,12 +39,6 @@ export function Footer() {
             ))}
           </div>
 
-          {/* Places link */}
-          <div className="text-sm text-zinc-600 text-right">
-            <a href="/places" className="text-blue-400 hover:text-blue-300 transition-colors">
-              Try the AI Places finder →
-            </a>
-          </div>
         </div>
 
         {/* Bottom bar */}

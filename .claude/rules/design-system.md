@@ -14,6 +14,7 @@ Dark-mode-native portfolio. The canvas is near-black zinc-950 (`#09090b`) — de
 - Shadow-based borders: `rgba(255,255,255,0.08)` ring instead of opaque CSS borders
 - Inter Variable with negative letter-spacing on headings
 - 8px base spacing grid, section padding at `py-24 md:py-32`
+- Executive portfolio scan pattern: lead with outcome/value, then proof metrics, then scannable project/skill cards
 
 ---
 
@@ -87,6 +88,16 @@ Blue (`#3B82F6` / `blue-400`/`blue-500`) appears for:
 ### Buttons (primary CTA)
 - Uses `FlipButton` — blue front, dark back, spring flip on hover
 - Social icon buttons: `rounded-full border border-zinc-700 text-zinc-400 hover:text-zinc-100 hover:border-zinc-500 transition-all duration-200`
+
+### Section nav
+- Right-side dot navigation is a desktop/tablet affordance only.
+- Hide below the `md` breakpoint to prevent overlap with hero text and mobile content.
+- Preserve accessible `aria-label` values for every section button.
+
+### Portfolio cards
+- Project cards should expose the project name, short outcome/description, and top stack tags without requiring hover.
+- Skill cards should group tools by category so the page remains useful without interacting with the orbital visualization.
+- Testimonial cards should be static and scannable; avoid rendering repeated hidden carousel copies unless a carousel is explicitly required.
 
 ### Tech tags / badges
 ```tsx

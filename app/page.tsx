@@ -2,6 +2,7 @@ import { SectionNav } from "@/components/ui/section-nav";
 import { TechMarquee } from "@/components/ui/tech-marquee";
 import { Hero } from "@/components/portfolio/Hero";
 import { About } from "@/components/portfolio/About";
+import { Experience } from "@/components/portfolio/Experience";
 import { Skills } from "@/components/portfolio/Skills";
 import { Projects } from "@/components/portfolio/Projects";
 import { Testimonials } from "@/components/portfolio/Testimonials";
@@ -11,6 +12,7 @@ import { Footer } from "@/components/portfolio/Footer";
 
 const sections = [
   { id: "about", label: "About" },
+  { id: "experience", label: "Timeline" },
   { id: "skills", label: "Skills" },
   { id: "projects", label: "Projects" },
   { id: "testimonials", label: "Reviews" },
@@ -23,9 +25,10 @@ export default function HomePage() {
     <>
       <SectionNav sections={sections} />
 
-      <main className="relative z-10">
+      <main className="relative z-10 overflow-x-clip">
         <Hero />
         <About />
+        <Experience />
         <TechMarquee />
         <Skills />
         <Projects />

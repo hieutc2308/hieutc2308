@@ -191,9 +191,7 @@ export function HyperTextParagraph({
           >
             {token.text}
           </Word>
-          {i < tokens.length - 1 && (
-            <span className="inline-block whitespace-pre"> </span>
-          )}
+          {i < tokens.length - 1 && " "}
         </React.Fragment>
       );
     });

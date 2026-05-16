@@ -1,14 +1,9 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
-import dynamic from "next/dynamic";
-import type { OrbitalItem } from "@/components/ui/radial-orbital-timeline";
-
-const RadialOrbitalTimeline = dynamic(
-  () => import("@/components/ui/radial-orbital-timeline"),
-  { ssr: false }
-);
+import { motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import RadialOrbitalTimeline, { type OrbitalItem } from "@/components/ui/radial-orbital-timeline";
+import { useRevealInView } from "@/components/ui/use-reveal-in-view";
 import {
   BarChart3,
   Code2,
@@ -76,17 +71,23 @@ const skillsData: OrbitalItem[] = [
 ];
 
 export function Skills() {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const ref = useRef<HTMLElement>(null);
+  const isInView = useRevealInView(ref, { once: true, margin: "-100px" });
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    const frame = window.requestAnimationFrame(() => setMounted(true));
+    return () => window.cancelAnimationFrame(frame);
+  }, []);
 
   return (
-    <section id="skills" className="relative py-24 md:py-32 px-6">
+    <section ref={ref} id="skills" className="relative py-24 md:py-32 px-6">
 
 
       <div className="relative z-10 max-w-6xl mx-auto">
-        <div ref={ref} className="mb-6">
+        <div className="mb-6">
           <motion.span
-            initial={{ opacity: 0, y: 10 }}
+            initial={false}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.5 }}
             className="text-xs font-semibold text-blue-400 uppercase tracking-widest mb-4 flex items-center gap-2"
@@ -95,7 +96,7 @@ export function Skills() {
             <span className="shine-text">Expertise</span>
           </motion.span>
           <motion.h2
-            initial={{ opacity: 0, y: 20 }}
+            initial={false}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.05 }}
             className="text-4xl md:text-5xl font-bold text-zinc-100 mb-2"
@@ -105,11 +106,25 @@ export function Skills() {
         </div>
 
         <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
+          initial={false}
           animate={isInView ? { opacity: 1, scale: 1 } : {}}
           transition={{ duration: 0.8, delay: 0.2 }}
         >
-          <RadialOrbitalTimeline timelineData={skillsData} />
+          {mounted ? (
+            <RadialOrbitalTimeline timelineData={skillsData} />
+          ) : (
+            <div className="grid min-h-[360px] grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {skillsData.map((skill) => (
+                <div
+                  key={skill.id}
+                  className="rounded-lg border border-white/[0.08] bg-zinc-950/70 p-5"
+                >
+                  <p className="text-sm font-semibold text-zinc-100">{skill.title}</p>
+                  <p className="mt-2 text-xs leading-relaxed text-zinc-500">{skill.content}</p>
+                </div>
+              ))}
+            </div>
+          )}
         </motion.div>
       </div>
     </section>
