@@ -15,46 +15,26 @@ export function Hero() {
       </div>
       {/* Content */}
       <div className="relative z-10 mx-auto flex max-w-6xl flex-col items-center text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: [0.6, 0, 0.25, 1] }}
-          className="mb-6"
-        >
+        <div className="mb-6">
           <span className="inline-block text-sm font-medium text-blue-400 border border-blue-500/30 rounded-full px-4 py-1.5 bg-blue-500/10 tracking-wide uppercase">
             Hanoi, Vietnam
           </span>
-        </motion.div>
+        </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1, ease: [0.6, 0, 0.25, 1] }}
-          className="mb-8"
-        >
+        <div className="mb-8">
           <AnimatedHero
             prefix="Tran Chi Hieu"
             titles={["BI Developer", "Data Analyst", "Analytic Engineer"]}
           />
-        </motion.div>
+        </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2, ease: [0.6, 0, 0.25, 1] }}
-          className="relative mb-8 max-w-3xl text-base sm:text-lg md:text-xl"
-        >
+        <div className="relative mb-8 max-w-3xl text-base sm:text-lg md:text-xl">
           <p className="leading-relaxed text-zinc-300">
             I design governed Power BI models, executive dashboards, and automated reporting pipelines that turn operational data into decisions.
           </p>
-        </motion.div>
+        </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.25, ease: [0.6, 0, 0.25, 1] }}
-          className="flex flex-col sm:flex-row items-center gap-4"
-        >
+        <div className="flex flex-col sm:flex-row items-center gap-4">
           <button
             className="rounded-full border border-blue-500/35 bg-blue-500/10 px-8 py-3 text-sm font-semibold text-blue-100 transition-colors duration-200 hover:border-blue-400/60 hover:bg-blue-500/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/60 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
             onClick={() => document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" })}
@@ -80,7 +60,7 @@ export function Hero() {
               <GithubIcon />
             </BorderGlowButton>
           </div>
-        </motion.div>
+        </div>
       </div>
 
       {/* Scroll indicator — mouse wheel style */}

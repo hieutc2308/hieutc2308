@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
 
 interface AnimatedHeroProps {
   prefix?: string;
@@ -29,23 +28,16 @@ function AnimatedHero({ prefix = "I am a", titles, description }: AnimatedHeroPr
           >
             &nbsp;
             {titles.map((title, index) => (
-              <motion.span
+              <span
                 key={index}
-                className="absolute whitespace-nowrap bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text px-1 font-extrabold text-transparent"
+                className={[
+                  "absolute whitespace-nowrap bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text px-1 font-extrabold text-transparent transition-all duration-500 ease-out",
+                  titleNumber === index ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0",
+                ].join(" ")}
                 style={{ fontSize: "clamp(2rem, 6vw, 4.5rem)", lineHeight: 1.05 }}
-                initial={{ opacity: 0, y: -16 }}
-                transition={{ type: "spring", stiffness: 50 }}
-                animate={
-                  titleNumber === index
-                    ? { y: 0, opacity: 1 }
-                    : {
-                      y: titleNumber > index ? -18 : 18,
-                      opacity: 0,
-                    }
-                }
               >
                 {title}
-              </motion.span>
+              </span>
             ))}
           </span>
         </h1>

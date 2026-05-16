@@ -1,8 +1,9 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
+import { motion } from "framer-motion";
 import { useRef } from "react";
 import resume from "@/data/resume.json";
+import { useRevealInView } from "@/components/ui/use-reveal-in-view";
 
 const rows = [
   ...resume.certifications.map((c) => ({
@@ -18,19 +19,19 @@ const rows = [
 ];
 
 export function Certifications() {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const ref = useRef<HTMLElement>(null);
+  const isInView = useRevealInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section id="certifications" className="relative py-24 md:py-32 px-6">
+    <section ref={ref} id="certifications" className="relative py-24 md:py-32 px-6">
 
 
-      <div ref={ref} className="relative z-10 max-w-6xl mx-auto flex flex-col md:flex-row gap-16 md:gap-24">
+      <div className="relative z-10 max-w-6xl mx-auto flex flex-col md:flex-row gap-16 md:gap-24">
 
         {/* Left: heading */}
         <div className="md:w-64 shrink-0">
           <motion.span
-            initial={{ opacity: 0, y: 10 }}
+            initial={false}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, ease: [0.6, 0, 0.25, 1] }}
             className="text-xs font-semibold text-blue-400 uppercase tracking-widest mb-4 flex items-center gap-2"
@@ -41,7 +42,7 @@ export function Certifications() {
             <span className="shine-text">Credentials</span>
           </motion.span>
           <motion.h2
-            initial={{ opacity: 0, y: 20 }}
+            initial={false}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.05 }}
             className="text-4xl md:text-5xl font-bold text-zinc-100 leading-tight"
@@ -57,7 +58,7 @@ export function Certifications() {
           {rows.map((row, i) => (
             <motion.div
               key={row.name}
-              initial={{ opacity: 0, y: 12 }}
+              initial={false}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: i * 0.08, ease: [0.6, 0, 0.25, 1] }}
             >

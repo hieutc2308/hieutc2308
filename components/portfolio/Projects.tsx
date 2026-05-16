@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { motion, useInView } from "framer-motion";
+import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { useRef } from "react";
 import resume from "@/data/resume.json";
+import { useRevealInView } from "@/components/ui/use-reveal-in-view";
 
 const MotionLink = motion.create(Link);
 
@@ -16,7 +17,7 @@ function ProjectCard({ project, index, isInView }: { project: Project; index: nu
   return (
     <MotionLink
       href={project.slug ? `/projects/${project.slug}` : "#"}
-      initial={{ opacity: 0, y: 24 }}
+      initial={false}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.65, delay: index * 0.08, ease: [0.6, 0, 0.25, 1] }}
       className={[
@@ -73,15 +74,15 @@ function ProjectCard({ project, index, isInView }: { project: Project; index: nu
 }
 
 export function Projects() {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-80px" });
+  const ref = useRef<HTMLElement>(null);
+  const isInView = useRevealInView(ref, { once: true, margin: "-80px" });
 
   return (
-    <section id="projects" className="relative py-24 md:py-32 px-6">
+    <section ref={ref} id="projects" className="relative py-24 md:py-32 px-6">
       <div className="relative z-10 mx-auto max-w-6xl">
-        <div ref={ref} className="mb-12 max-w-2xl">
+        <div className="mb-12 max-w-2xl">
           <motion.span
-            initial={{ opacity: 0, y: 10 }}
+            initial={false}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, ease: [0.6, 0, 0.25, 1] }}
             className="text-xs font-semibold text-blue-400 uppercase tracking-widest mb-4 flex items-center gap-2"
@@ -92,7 +93,7 @@ export function Projects() {
             <span className="shine-text">Work</span>
           </motion.span>
           <motion.h2
-            initial={{ opacity: 0, y: 20 }}
+            initial={false}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.05, ease: [0.6, 0, 0.25, 1] }}
             className="text-4xl md:text-5xl font-bold text-zinc-100"
@@ -100,7 +101,7 @@ export function Projects() {
             Projects
           </motion.h2>
           <motion.p
-            initial={{ opacity: 0, y: 16 }}
+            initial={false}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.1, ease: [0.6, 0, 0.25, 1] }}
             className="mt-4 text-base leading-relaxed text-zinc-400"

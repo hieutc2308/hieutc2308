@@ -1,7 +1,3 @@
-"use client";
-
-import { motion } from "framer-motion";
-
 const METRICS = [
   {
     value: "6+",
@@ -28,14 +24,10 @@ const METRICS = [
 export function StatCardStack() {
   return (
     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-      {METRICS.map((metric, index) => (
-        <motion.div
+      {METRICS.map((metric) => (
+        <div
           key={metric.label}
           data-testid="about-metric-card"
-          initial={{ opacity: 0, y: 18 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.55, delay: index * 0.06, ease: [0.6, 0, 0.25, 1] }}
           className="relative min-h-40 overflow-hidden rounded-2xl border border-white/[0.08] bg-zinc-950/65 p-5"
         >
           <div
@@ -61,7 +53,7 @@ export function StatCardStack() {
               {metric.detail}
             </p>
           </div>
-        </motion.div>
+        </div>
       ))}
     </div>
   );

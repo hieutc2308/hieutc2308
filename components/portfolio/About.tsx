@@ -1,23 +1,24 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
+import { motion } from "framer-motion";
 import { useRef } from "react";
 import { HyperTextParagraph } from "@/components/ui/hyper-text-paragraph";
 import { StatCardStack } from "@/components/portfolio/StatCardStack";
+import { useRevealInView } from "@/components/ui/use-reveal-in-view";
 
 export function About() {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const ref = useRef<HTMLElement>(null);
+  const isInView = useRevealInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section id="about" className="relative py-24 md:py-32 px-6">
+    <section ref={ref} id="about" className="relative py-24 md:py-32 px-6">
 
 
       <div className="relative z-10 max-w-6xl mx-auto">
-        <div ref={ref} className="grid grid-cols-1 gap-14 md:grid-cols-[0.95fr_1.05fr] md:gap-16 md:items-center">
+        <div className="grid grid-cols-1 gap-14 md:grid-cols-[0.95fr_1.05fr] md:gap-16 md:items-center">
           {/* Text */}
           <motion.div
-            initial={{ opacity: 0, x: -50 }}
+            initial={false}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.7, ease: [0.6, 0, 0.25, 1] }}
           >
@@ -43,7 +44,7 @@ export function About() {
 
           {/* Stat card stack */}
           <motion.div
-            initial={{ opacity: 0, x: 50 }}
+            initial={false}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.7, delay: 0.08, ease: [0.6, 0, 0.25, 1] }}
             className="md:pl-2"

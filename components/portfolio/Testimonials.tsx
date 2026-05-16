@@ -211,7 +211,7 @@ export function Testimonials() {
               id="testimonial-prev"
               onClick={() => navigateTo(virtualCurrent - 1)}
               aria-label="Previous testimonial"
-              className="w-10 h-10 shrink-0 rounded-full border border-zinc-700 flex items-center justify-center text-zinc-400 hover:border-blue-500/60 hover:text-blue-500 transition-colors"
+              className="w-10 h-10 shrink-0 cursor-pointer rounded-full border border-zinc-700 flex items-center justify-center text-zinc-400 hover:border-blue-500/60 hover:text-blue-500 transition-colors"
             >
               <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
                 <path fillRule="evenodd" clipRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" />
@@ -226,7 +226,7 @@ export function Testimonials() {
               id="testimonial-next"
               onClick={() => navigateTo(virtualCurrent + 1)}
               aria-label="Next testimonial"
-              className="w-10 h-10 shrink-0 rounded-full border border-zinc-700 flex items-center justify-center text-zinc-400 hover:border-blue-500/60 hover:text-blue-500 transition-colors"
+              className="w-10 h-10 shrink-0 cursor-pointer rounded-full border border-zinc-700 flex items-center justify-center text-zinc-400 hover:border-blue-500/60 hover:text-blue-500 transition-colors"
             >
               <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
                 <path fillRule="evenodd" clipRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" />

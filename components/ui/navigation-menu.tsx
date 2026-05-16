@@ -3,6 +3,7 @@
 import * as React from "react";
 import { motion, useScroll, useMotionValueEvent, AnimatePresence } from "framer-motion";
 import { Navigation, Menu } from "lucide-react";
+import Link from "next/link";
 import { cn } from "@/lib/utils";
 
 export interface NavItem {
@@ -15,6 +16,7 @@ interface AnimatedNavProps {
 }
 
 const EXPAND_SCROLL_THRESHOLD = 80;
+const MotionLink = motion.create(Link);
 
 export function AnimatedNav({ items }: AnimatedNavProps) {
   const [isExpanded, setExpanded] = React.useState(true);
@@ -103,7 +105,7 @@ export function AnimatedNav({ items }: AnimatedNavProps) {
 
               {/* Links */}
               {items.map((item, i) => (
-                <motion.a
+                <MotionLink
                   key={item.name}
                   href={item.href}
                   initial={{ opacity: 0, x: -6 }}
@@ -113,7 +115,7 @@ export function AnimatedNav({ items }: AnimatedNavProps) {
                   className="text-sm font-medium text-zinc-400 hover:text-zinc-100 transition-colors px-3 py-1 rounded-full hover:bg-white/5 whitespace-nowrap"
                 >
                   {item.name}
-                </motion.a>
+                </MotionLink>
               ))}
 
               {/* Trailing padding spacer */}
