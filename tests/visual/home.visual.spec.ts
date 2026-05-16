@@ -22,7 +22,7 @@ test.describe('Home — Visual Snapshots', () => {
 
   test('skills section', async ({ page, waitForAnimations }) => {
     await page.locator('#skills').scrollIntoViewIfNeeded()
-    await page.waitForTimeout(1200) // extra time for SSR-disabled dynamic import
+    await page.waitForTimeout(1200) // extra time for the mounted skills timeline
     await waitForAnimations()
     await expect(page.locator('#skills')).toHaveScreenshot('skills.png')
   })
