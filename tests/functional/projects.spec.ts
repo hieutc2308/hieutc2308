@@ -1,6 +1,6 @@
 // tests/functional/projects.spec.ts
 import { test, expect } from '@playwright/test'
-import resumeData from '../../data/resume.json'
+import resumeData from '../../src/content/resume.json'
 
 const firstSlug = resumeData.projects[0].slug // "healthtech-clinic-analytics"
 const firstName = resumeData.projects[0].name

@@ -213,7 +213,7 @@ test.describe('Portfolio Home', () => {
     await expect(page.getByRole('heading', { name: 'HealthTech Platform (Clinic Analytics)' })).toBeVisible()
     await expect(page.getByRole('heading', { name: 'Project Overview' })).toBeVisible()
     await expect(page.getByText('Documents')).toBeVisible()
-    await expect(page.getByText('portfolio-projects/healthtech-clinic-analytics')).toBeVisible()
+    await expect(page.getByText('content/projects/healthtech-clinic-analytics')).toBeVisible()
     await expect(page.getByRole('heading', { name: 'Content' })).toBeVisible()
   })
 

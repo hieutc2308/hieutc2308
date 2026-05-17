@@ -4,9 +4,13 @@ const localURL = process.env.BASE_URL ?? 'http://localhost:3000'
 
 export default defineConfig({
   testDir: './tests',
+  outputDir: '.tmp/playwright/test-results',
+  reporter: process.env.CI
+    ? [['list'], ['html', { outputFolder: '.tmp/playwright/report', open: 'never' }]]
+    : [['list']],
   use: {
     baseURL: localURL,
-    headless: !!process.env.CI,
+    headless: true,
     trace: 'on-first-retry',
   },
   projects: [
