@@ -14,24 +14,24 @@
 
 | Action | File | Responsibility |
 |---|---|---|
-| **Create** | `components/portfolio/StatCardStack.tsx` | Horizontal card stack with 4 live-animated stat cards |
-| **Modify** | `components/portfolio/About.tsx` | Delete 5 chart functions, import StatCardStack, fix right-col delay |
-| **Modify** | `app/globals.css` | Add `@keyframes barUp` and `@keyframes scanLine` |
-| **Modify** | `components/portfolio/Projects.tsx` | Rewrite as asymmetric gallery, fix label motion |
-| **Modify** | `components/portfolio/Certifications.tsx` | Fix label ease + row stagger |
-| **Modify** | `components/portfolio/Contact.tsx` | Fix x offset ±40 → ±50 |
+| **Create** | `src/features/portfolio/components/StatCardStack.tsx` | Horizontal card stack with 4 live-animated stat cards |
+| **Modify** | `src/features/portfolio/components/About.tsx` | Delete 5 chart functions, import StatCardStack, fix right-col delay |
+| **Modify** | `src/app/globals.css` | Add `@keyframes barUp` and `@keyframes scanLine` |
+| **Modify** | `src/features/portfolio/components/Projects.tsx` | Rewrite as asymmetric gallery, fix label motion |
+| **Modify** | `src/features/portfolio/components/Certifications.tsx` | Fix label ease + row stagger |
+| **Modify** | `src/features/portfolio/components/Contact.tsx` | Fix x offset ±40 → ±50 |
 
 ---
 
 ## Task 1 — StatCardStack: shell, queue logic, stack layout
 
 **Files:**
-- Create: `components/portfolio/StatCardStack.tsx`
-- Modify: `app/globals.css` (add keyframes)
+- Create: `src/features/portfolio/components/StatCardStack.tsx`
+- Modify: `src/app/globals.css` (add keyframes)
 
 - [ ] **Step 1: Add keyframes to globals.css**
 
-Open `app/globals.css`. After the closing `}` of the `.shine-text` block (line ~200), add:
+Open `src/app/globals.css`. After the closing `}` of the `.shine-text` block (line ~200), add:
 
 ```css
 /* StatCardStack animations */
@@ -51,7 +51,7 @@ Open `app/globals.css`. After the closing `}` of the `.shine-text` block (line ~
 
 - [ ] **Step 2: Create the StatCardStack shell with queue logic**
 
-Create `components/portfolio/StatCardStack.tsx`:
+Create `src/features/portfolio/components/StatCardStack.tsx`:
 
 ```tsx
 "use client";
@@ -231,7 +231,7 @@ Expected: no errors in `StatCardStack.tsx`.
 - [ ] **Step 4: Commit**
 
 ```bash
-git add components/portfolio/StatCardStack.tsx app/globals.css
+git add src/features/portfolio/components/StatCardStack.tsx src/app/globals.css
 git commit -m "feat: add StatCardStack shell with horizontal stack layout"
 ```
 
@@ -240,7 +240,7 @@ git commit -m "feat: add StatCardStack shell with horizontal stack layout"
 ## Task 2 — StatCardStack: Card 01 (Waveform) + Card 02 (Bars)
 
 **Files:**
-- Modify: `components/portfolio/StatCardStack.tsx`
+- Modify: `src/features/portfolio/components/StatCardStack.tsx`
 
 - [ ] **Step 1: Replace placeholder `CardViz` with real implementations**
 
@@ -363,7 +363,7 @@ Open http://localhost:3000. Go to the About section. The right column should sti
 - [ ] **Step 4: Commit**
 
 ```bash
-git add components/portfolio/StatCardStack.tsx
+git add src/features/portfolio/components/StatCardStack.tsx
 git commit -m "feat: add waveform and bars viz to StatCardStack"
 ```
 
@@ -372,7 +372,7 @@ git commit -m "feat: add waveform and bars viz to StatCardStack"
 ## Task 3 — StatCardStack: Card 03 (Orbiting certs) + Card 04 (Donut arcs)
 
 **Files:**
-- Modify: `components/portfolio/StatCardStack.tsx`
+- Modify: `src/features/portfolio/components/StatCardStack.tsx`
 
 - [ ] **Step 1: Add Framer Motion import**
 
@@ -534,7 +534,7 @@ Expected: no errors.
 - [ ] **Step 6: Commit**
 
 ```bash
-git add components/portfolio/StatCardStack.tsx
+git add src/features/portfolio/components/StatCardStack.tsx
 git commit -m "feat: add cert orbits and donut arc draw viz to StatCardStack"
 ```
 
@@ -543,11 +543,11 @@ git commit -m "feat: add cert orbits and donut arc draw viz to StatCardStack"
 ## Task 4 — Wire StatCardStack into About.tsx
 
 **Files:**
-- Modify: `components/portfolio/About.tsx`
+- Modify: `src/features/portfolio/components/About.tsx`
 
 - [ ] **Step 1: Delete old chart card code from About.tsx**
 
-Open `components/portfolio/About.tsx`. Delete the following in full:
+Open `src/features/portfolio/components/About.tsx`. Delete the following in full:
 - The `LineChartCard` function (lines ~9–72)
 - The `BarChartCard` function (lines ~74–105)
 - The `CertCard` function (lines ~107–142)
@@ -562,7 +562,7 @@ The file should now have only the `About` export function remaining, plus its im
 At the top of `About.tsx`, add:
 
 ```tsx
-import { StatCardStack } from "@/components/portfolio/StatCardStack";
+import { StatCardStack } from "@/features/portfolio/components/StatCardStack";
 ```
 
 - [ ] **Step 3: Replace the chart cards grid with StatCardStack**
@@ -620,7 +620,7 @@ Open http://localhost:3000. Scroll to the About section. Verify:
 - [ ] **Step 6: Commit**
 
 ```bash
-git add components/portfolio/About.tsx
+git add src/features/portfolio/components/About.tsx
 git commit -m "feat: replace About stat grid with StatCardStack"
 ```
 
@@ -629,13 +629,13 @@ git commit -m "feat: replace About stat grid with StatCardStack"
 ## Task 5 — Global motion fixes: Projects, Certifications, Contact
 
 **Files:**
-- Modify: `components/portfolio/Projects.tsx`
-- Modify: `components/portfolio/Certifications.tsx`
-- Modify: `components/portfolio/Contact.tsx`
+- Modify: `src/features/portfolio/components/Projects.tsx`
+- Modify: `src/features/portfolio/components/Certifications.tsx`
+- Modify: `src/features/portfolio/components/Contact.tsx`
 
 - [ ] **Step 1: Fix Projects.tsx section label**
 
-In `components/portfolio/Projects.tsx`, find the section label motion span (around line 92):
+In `src/features/portfolio/components/Projects.tsx`, find the section label motion span (around line 92):
 
 ```tsx
 // BEFORE:
@@ -648,7 +648,7 @@ transition={{ duration: 0.6, ease: [0.6, 0, 0.25, 1] }}
 
 - [ ] **Step 2: Fix Certifications.tsx section label and row stagger**
 
-In `components/portfolio/Certifications.tsx`:
+In `src/features/portfolio/components/Certifications.tsx`:
 
 Find the section label motion span (around line 33):
 ```tsx
@@ -668,7 +668,7 @@ transition={{ duration: 0.6, delay: i * 0.08, ease: [0.6, 0, 0.25, 1] }}
 
 - [ ] **Step 3: Fix Contact.tsx x offsets**
 
-In `components/portfolio/Contact.tsx`:
+In `src/features/portfolio/components/Contact.tsx`:
 
 Left column (around line 34):
 ```tsx
@@ -697,7 +697,7 @@ Expected: no errors.
 - [ ] **Step 5: Commit**
 
 ```bash
-git add components/portfolio/Projects.tsx components/portfolio/Certifications.tsx components/portfolio/Contact.tsx
+git add src/features/portfolio/components/Projects.tsx src/features/portfolio/components/Certifications.tsx src/features/portfolio/components/Contact.tsx
 git commit -m "fix: standardise motion tokens across Projects, Certifications, Contact"
 ```
 
@@ -706,11 +706,11 @@ git commit -m "fix: standardise motion tokens across Projects, Certifications, C
 ## Task 6 — Projects: asymmetric gallery
 
 **Files:**
-- Modify: `components/portfolio/Projects.tsx`
+- Modify: `src/features/portfolio/components/Projects.tsx`
 
 - [ ] **Step 1: Replace Projects.tsx entirely**
 
-Replace the full contents of `components/portfolio/Projects.tsx` with:
+Replace the full contents of `src/features/portfolio/components/Projects.tsx` with:
 
 ```tsx
 "use client";
@@ -718,8 +718,8 @@ Replace the full contents of `components/portfolio/Projects.tsx` with:
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
-import { cn } from "@/lib/utils";
-import resume from "@/data/resume.json";
+import { cn } from "@/shared/src/shared/lib/utils";
+import resume from "@/content/resume.json";
 
 // ─── Gallery card configuration ───────────────────────────────────────────────
 // One entry per project — order matches resume.projects[0..4]
@@ -996,7 +996,7 @@ Expected: build succeeds with no errors. (The `export const dynamic = "force-dyn
 - [ ] **Step 5: Commit**
 
 ```bash
-git add components/portfolio/Projects.tsx
+git add src/features/portfolio/components/Projects.tsx
 git commit -m "feat: replace Projects bento grid with asymmetric gallery"
 ```
 

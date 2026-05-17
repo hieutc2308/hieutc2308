@@ -8,12 +8,12 @@
 ## 1. Bug Fixes
 
 ### 1.1 Stale metadata in `places/page.tsx`
-- **File:** `app/places/page.tsx`, line 9
+- **File:** `src/app/places/page.tsx`, line 9
 - **Change:** Update metadata `description` from "Powered by Gemini AI" to "Powered by Claude"
 - **Why:** The app migrated from Gemini to Claude (commit `3b23929`). The metadata was never updated.
 
 ### 1.2 Missing error handling in `verify-pin/route.ts`
-- **File:** `app/api/verify-pin/route.ts`
+- **File:** `src/app/api/verify-pin/route.ts`
 - **Change:** Wrap `request.json()` in try/catch. Return `400` with `{ error: "Invalid request body" }` on parse failure.
 - **Why:** Malformed JSON body currently causes an unhandled rejection and a 500 with no useful error message.
 
@@ -27,12 +27,12 @@
 ## 2. Dead Code Removal
 
 ### 2.1 Unused `PlaceCard` component in `PlaceCard.tsx`
-- **File:** `components/places/PlaceCard.tsx`
+- **File:** `src/features/places/components/PlaceCard.tsx`
 - **Change:** Delete the `PlaceCard` function export. Keep only the `PlaceSuggestion` interface.
 - **Why:** `ResultCarousel.tsx` renders its own internal card. `PlaceSearch.tsx` imports only the `PlaceSuggestion` type. The component export is never rendered anywhere.
 
-### 2.2 Unused `getAllPlaces()` in `lib/places.ts`
-- **File:** `lib/places.ts`
+### 2.2 Unused `getAllPlaces()` in `src/features/places/services/places.ts`
+- **File:** `src/features/places/services/places.ts`
 - **Change:** Remove the `getAllPlaces()` function and its unused import of `createServerClient` if it becomes the sole caller.
 - **Why:** No API route, component, or script calls `getAllPlaces()`. Only `searchPlacesByEmbedding()` is used in the suggest route.
 
@@ -40,7 +40,7 @@
 
 ## 3. Missing Location Patterns
 
-- **File:** `lib/places.ts`, `LOCATION_MAP` array
+- **File:** `src/features/places/services/places.ts`, `LOCATION_MAP` array
 - **Change:** Add 5 new entries:
 
 | City | Keywords | Pattern |
@@ -57,13 +57,13 @@
 
 ## 4. DESIGN.md Creation & Validation
 
-### 4.1 Create `.claude/DESIGN.md`
-- Source tokens from `.claude/rules/design-system.md`
+### 4.1 Create `docs/ai/design-system.md`
+- Source tokens from `docs/ai/design-system.md`
 - Format: YAML frontmatter (colors, typography, spacing, rounded, components) + markdown prose sections
 - Sections: Overview, Colors, Typography, Layout, Components, Do's and Don'ts
 
 ### 4.2 Lint and fix
-- Run `npx @google/design.md lint .claude/DESIGN.md`
+- Run `npx @google/design.md lint docs/ai/design-system.md`
 - Fix any errors (broken refs, structural issues) and warnings (contrast, orphaned tokens, missing sections)
 
 ---
@@ -76,5 +76,5 @@
 4. Remove `PlaceCard` component
 5. Remove `getAllPlaces()`
 6. Add missing location patterns to `LOCATION_MAP`
-7. Create `.claude/DESIGN.md`
+7. Create `docs/ai/design-system.md`
 8. Run linter and fix findings

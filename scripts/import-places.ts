@@ -11,7 +11,9 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-const SAVED_DIR = path.resolve(__dirname, "../Saved");
+const SAVED_DIR = process.env.LOCAL_SAVED_PLACES_DIR
+  ? path.resolve(process.env.LOCAL_SAVED_PLACES_DIR)
+  : path.resolve(__dirname, "../.tmp/saved-places");
 
 interface PlaceRow {
   name: string;

@@ -1,7 +1,7 @@
 # UI/UX Improvements — Design Spec
 
-**Date:** 2026-04-27  
-**Scope:** Global motion system audit + About section redesign + Projects section redesign  
+**Date:** 2026-04-27
+**Scope:** Global motion system audit + About section redesign + Projects section redesign
 **Sections untouched:** Hero, Skills, Testimonials, Certifications, Contact, /places
 
 ---
@@ -31,20 +31,20 @@ The site's animations were assembled from different sources. The easing identity
 
 ### Changes per file
 
-**`components/portfolio/About.tsx`**
+**`src/features/portfolio/components/About.tsx`**
 - `LineChartCard`, `BarChartCard`, `CertCard` — **skip these fixes**; all three are deleted as part of Section 2 (StatCardStack).
 - Section container left col: duration `0.7` ✓ (keep), ease already correct ✓
 - Section container right col: duration `0.7` ✓, delay `0.15` → `0.08` (one stagger unit)
 
-**`components/portfolio/Projects.tsx`**
+**`src/features/portfolio/components/Projects.tsx`**
 - Section label: add `ease: [0.6,0,0.25,1]`; duration `0.5` → `0.6`
 - Card stagger: `delay: 0.08 * index` ✓ (already correct — keep)
 
-**`components/portfolio/Certifications.tsx`**
+**`src/features/portfolio/components/Certifications.tsx`**
 - Section label: add `ease: [0.6,0,0.25,1]`; duration `0.5` → `0.6`
 - Row stagger: `delay: 0.1 + i * 0.07` → `delay: i * 0.08`
 
-**`components/portfolio/Contact.tsx`**
+**`src/features/portfolio/components/Contact.tsx`**
 - Left col `x: -40` → `x: -50`
 - Right col `x: 40` → `x: 50`
 
@@ -116,8 +116,8 @@ Left column (bio text) is unchanged.
 
 ### Component
 
-New file: `components/portfolio/StatCardStack.tsx` (client component).  
-In `components/portfolio/About.tsx`: delete the four chart card functions (`LineChartCard`, `BarChartCard`, `CertCard`, `DonutCard`, `arcPath`), import and render `<StatCardStack />` in place of the `grid grid-cols-2 gap-4` div.
+New file: `src/features/portfolio/components/StatCardStack.tsx` (client component).
+In `src/features/portfolio/components/About.tsx`: delete the four chart card functions (`LineChartCard`, `BarChartCard`, `CertCard`, `DonutCard`, `arcPath`), import and render `<StatCardStack />` in place of the `grid grid-cols-2 gap-4` div.
 
 ---
 
@@ -179,7 +179,7 @@ Each card contains:
 
 Cards enter with staggered `y: 20 → 0, opacity: 0 → 1` using the Section 1 motion tokens:
 - Duration: `0.6s`
-- Ease: `[0.6,0,0.25,1]`  
+- Ease: `[0.6,0,0.25,1]`
 - Stagger: `0.08s × index`
 - Trigger: `useInView` with `once: true, margin: "-80px"`
 
@@ -200,7 +200,7 @@ Cards enter with staggered `y: 20 → 0, opacity: 0 → 1` using the Section 1 m
 
 ## Execution Order
 
-1. Build `StatCardStack` component (`components/portfolio/StatCardStack.tsx`), replace About right column — this also resolves the 3 About-specific motion fixes (LineChart, BarChart, CertCard) since those components are deleted
+1. Build `StatCardStack` component (`src/features/portfolio/components/StatCardStack.tsx`), replace About right column — this also resolves the 3 About-specific motion fixes (LineChart, BarChart, CertCard) since those components are deleted
 2. Apply remaining global motion token fixes (5 changes across 3 files: Projects, Certifications, Contact + About section container delay)
 3. Rewrite `Projects` section with asymmetric gallery
 

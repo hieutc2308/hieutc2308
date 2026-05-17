@@ -1,6 +1,6 @@
 // tests/visual/projects.visual.spec.ts
 import { test, expect } from '../fixtures/base'
-import resumeData from '../../data/resume.json'
+import resumeData from '../../src/content/resume.json'
 import type { Page } from '@playwright/test'
 
 const firstSlug = resumeData.projects[0].slug

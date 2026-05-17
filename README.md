@@ -1,36 +1,80 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Hieu Portfolio
 
-## Getting Started
+Personal Next.js portfolio for Tran Chi Hieu with two modules:
 
-First, run the development server:
+- `/` - animated BI/Data portfolio
+- `/places` - private AI place finder powered by saved places, Supabase, Voyage embeddings, and Anthropic
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Stack
+
+- Next.js 16 App Router
+- React 19 + TypeScript
+- Tailwind CSS v4
+- Framer Motion
+- Supabase
+- Anthropic SDK + Voyage embeddings
+- Playwright functional and visual tests
+
+## Structure
+
+```text
+src/
+  app/              Next.js routes, layouts, API handlers, global CSS
+  content/          Runtime content imported by the app
+  features/         Domain-specific UI and services
+  shared/           Shared UI primitives and utilities
+content/projects/  Editable case-study source material
+docs/ai/           Agent-facing architecture and implementation guidance
+tests/             Playwright functional and visual suites
+scripts/           Data import and embedding utilities
+.tmp/              Ignored local workspace for private inputs and generated artifacts
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Setup
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm install
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Open `http://localhost:3000`.
 
-## Learn More
+## Environment
 
-To learn more about Next.js, take a look at the following resources:
+Create `.env.local` when running `/places` or import scripts:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+ANTHROPIC_API_KEY=
+VOYAGE_API_KEY=
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
+PLACES_PIN=
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Portfolio pages build without real keys, but Next build expects Supabase URL variables to exist in CI.
 
-## Deploy on Vercel
+## Scripts
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+npm run lint
+npm run build
+npm test
+npm run test:visual
+npm run import-places
+npm run generate-embeddings
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Local Data
+
+Place-import CSVs are local private data. Put Google Maps Takeout CSVs in:
+
+```text
+.tmp/saved-places/
+```
+
+Or set `LOCAL_SAVED_PLACES_DIR=/absolute/path/to/csv-folder` before running `npm run import-places`.
+
+## Agent Notes
+
+Use `AGENTS.md` for the current development workflow and `docs/ai/` for deeper architecture, design, and implementation guidance.
